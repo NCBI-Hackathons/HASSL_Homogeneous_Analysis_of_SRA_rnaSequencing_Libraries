@@ -10,7 +10,7 @@ THREADS = 10
 SAMPLES = 'SRR2089122'.split()
 
 rule all: 
-	input: expand("{sample}.hisat1.log", sample=SAMPLES), expand("{sample}.transferred.logs", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
+	input: expand("{sample}.hisat.1.log", sample=SAMPLES), expand("{sample}.transferred.logs", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
 
 
 	# input: "dSRR959265.GRCh38.p4.hisat.sorted.bam"
