@@ -20,7 +20,7 @@ rule all:
 
 rule transfer_logs_s3: 
 	output: touch("{sample}.transferred.logs")
-	input:  "{sample}.hisat1.log", "{sample}.hisat2.log"
+	input:  "{sample}.hisat.1.log", "{sample}.hisat.2.log"
 	message: "transferring {input}'s logs to S3"
 	shell: "s3cmd put {sample}.hisat.1.log s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {sample}.hisat.2.log s3://ncbi-hackathon-aug/rnamapping/"
 
