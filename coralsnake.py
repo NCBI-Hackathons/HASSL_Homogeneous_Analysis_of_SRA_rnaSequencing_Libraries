@@ -8,14 +8,14 @@ HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
 
 
 # DATASETS = "SRR1295542".split() 
-THREADS = 8 
+THREADS = 10
 
 
 
 rule all: 
-	input: "SRR1295542.GRCh38.p4.hisat.sorted.bam"
+	input: "SRR1295542.GRCh38.p4.hisat.sorted.sra"
 
-sample = 'SRR1295542'
+sample = 'SRR959265'
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
 
