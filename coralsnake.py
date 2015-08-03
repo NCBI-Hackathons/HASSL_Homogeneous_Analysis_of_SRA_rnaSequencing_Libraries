@@ -46,11 +46,11 @@ rule hisat_alignment:
 	message: "hisat aligning reads {sample}.fastq to {REF} to produce {output}"
 	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.{REF}.hisat.sam"
 
-rule star_alignment: 
-	output: "{sample}.{REF}.star.sam"
-	input: "{sample}.fastq"
-	message: "star aligning reads {sample}.fastq to {REF} to produce {output}"
-	shell: <star code> 
+# rule star_alignment: 
+# 	output: "{sample}.{REF}.star.sam"
+# 	input: "{sample}.fastq"
+# 	message: "star aligning reads {sample}.fastq to {REF} to produce {output}"
+# 	shell: <star code> 
 
 
 
