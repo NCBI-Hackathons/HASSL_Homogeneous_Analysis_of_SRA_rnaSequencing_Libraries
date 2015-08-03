@@ -18,7 +18,7 @@ THREADS = 8
 sample = "SRR1295542" 
 
 rule all: 
-	input: "SRR1295542.{REF}.{alner}.sorted.bam"
+	input: "SRR1295542.GRCh38.p4.hisat.sorted.bam"
 
 
 
