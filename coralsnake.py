@@ -56,6 +56,7 @@ rule hisat_alignment:
 	message: "hisat aligning reads {sample}.fastq to {REF} with {THREADS} threads to produce {output}"
 	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.{REF}.hisat.sam"
 
+
 # rule star_alignment: 
 # 	output: "{sample}.{REF}.star.sam"
 # 	input: "{sample}.fastq"
