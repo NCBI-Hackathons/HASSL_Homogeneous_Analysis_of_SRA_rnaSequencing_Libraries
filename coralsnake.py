@@ -7,7 +7,7 @@ HISATREF = "/home/ubuntu/russ/ncbi/hisat_index/GRCh38.p4"
 # STAR100REF = 
 
 
-DATASETS = "SRR1295542".split() 
+# DATASETS = "SRR1295542".split() 
 THREADS = 8 
 
 
@@ -15,7 +15,7 @@ THREADS = 8
 # 	output: counts
 # 	input: gff3 + sorted.bam 
 
-sample = DATASETS[0] 
+sample = "SRR1295542" 
 
 rule all: 
 	input: "{sample}.{REF}.{alner}.sorted.bam"
