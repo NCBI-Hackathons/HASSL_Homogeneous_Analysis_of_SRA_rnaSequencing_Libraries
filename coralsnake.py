@@ -51,7 +51,7 @@ rule sam_to_bam:
 	shell: "samtools view -bS {input} > {output}"
 
 rule hisat_alignment:
-	output: "{sample}.GRCh38.p4.hisat.sam"
+	output: "{sample}.GRCh38.p4.{alner}.sam"
 	# input: "{sample}.fastq"
 	message: "hisat aligning reads {sample}.fastq to GRCh38.p4 with {THREADS} threads to produce {output}"
 	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.GRCh38.p4.hisat.sam"
