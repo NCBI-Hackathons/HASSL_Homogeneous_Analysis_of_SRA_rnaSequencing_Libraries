@@ -21,46 +21,46 @@ rule all:
 
 
 rule kar_sra: 
-	output: "{sample}.{REF}.{alner}.sorted.sra"
-	input: "{sample}.{REF}.{alner}.sorted.sradir"
+	output: "{sample}.GRCh38.p4.{alner}.sorted.sra"
+	input: "{sample}.GRCh38.p4.{alner}.sorted.sradir"
 	message: "converting sradir {input} to sra archive file {output}"
 	shell: "kar -c {output} -d {input}"
 
 rule sort_sra:
-	output: "{sample}.{REF}.{alner}.sorted.sradir"
-	input: "{sample}.{REF}.{alner}.sradir"
+	output: "{sample}.GRCh38.p4.{alner}.sorted.sradir"
+	input: "{sample}.GRCh38.p4.{alner}.sradir"
 	message: "sorting sradir {input} to {output}" 
 	shell: "sra-sort {input} {output}"
 
 rule bam_to_sra:
-	output: "{sample}.{REF}.{alner}.sradir"
-	input: "{sample}.{REF}.{alner}.bam"
+	output: "{sample}.GRCh38.p4.{alner}.sradir"
+	input: "{sample}.GRCh38.p4.{alner}.bam"
 	message: "converting {input} bam to sra {output}"
-	shell: "bam-load -o {sample}.{REF}.{alner}.sradir -k <config-GI-file> {input}"
+	shell: "bam-load -o {sample}.GRCh38.p4.{alner}.sradir -k <config-GI-file> {input}"
 
 rule sort_bam:
-	output: "{sample}.{REF}.{alner}.sorted.bam"
-	input: "{sample}.{REF}.{alner}.bam"
+	output: "{sample}.GRCh38.p4.{alner}.sorted.bam"
+	input: "{sample}.GRCh38.p4.{alner}.bam"
 	message: "sorting {intput} to {output}"
 	shell: "samtools sort {input} {output}.sorted"
 
 rule sam_to_bam:
-	output: "{sample}.{REF}.{alner}.bam"
-	input: "{sample}.{REF}.{alner}.sam"
+	output: "{sample}.GRCh38.p4.{alner}.bam"
+	input: "{sample}.GRCh38.p4.{alner}.sam"
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
 
 rule hisat_alignment:
-	output: "{sample}.{REF}.hisat.sam"
+	output: "{sample}.GRCh38.p4.hisat.sam"
 	# input: "{sample}.fastq"
-	message: "hisat aligning reads {sample}.fastq to {REF} with {THREADS} threads to produce {output}"
-	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.{REF}.hisat.sam"
+	message: "hisat aligning reads {sample}.fastq to GRCh38.p4 with {THREADS} threads to produce {output}"
+	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.GRCh38.p4.hisat.sam"
 
 
 # rule star_alignment: 
-# 	output: "{sample}.{REF}.star.sam"
+# 	output: "{sample}.GRCh38.p4.star.sam"
 # 	input: "{sample}.fastq"
-# 	message: "star aligning reads {sample}.fastq to {REF} to produce {output}"
+# 	message: "star aligning reads {sample}.fastq to GRCh38.p4 to produce {output}"
 # 	shell: <star code> 
 
 
