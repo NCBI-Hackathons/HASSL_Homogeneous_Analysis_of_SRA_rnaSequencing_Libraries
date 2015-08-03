@@ -35,7 +35,7 @@ rule sort_bam:
 	shell: "samtools sort {input} {output}.sorted"
 
 rule sam_to_bam:
-	output: "{sample}.{REF}.{alner}.sorted.bam"
+	output: "{sample}.{REF}.{alner}.bam"
 	input: "{sample}.{REF}.{alner}.sam"
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
