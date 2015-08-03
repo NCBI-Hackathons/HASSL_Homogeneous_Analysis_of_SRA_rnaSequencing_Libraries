@@ -22,11 +22,11 @@ rule all:
 
 
 
-rule index_sam:
-	output: "{sample}.{REF}.{alner}.sorted.sam.sai"
-	input: "{sample}.{ref}.{alner}.sorted.sam"
-	message: "indexing sam {input}"
-	shell: {samtools sortsam? }
+# rule index_sam:
+# 	output: "{sample}.{REF}.{alner}.sorted.sam.sai"
+# 	input: "{sample}.{ref}.{alner}.sorted.sam"
+# 	message: "indexing sam {input}"
+# 	shell: "{samtools sortsam? }
 
 rule sort_bam:
 	output: "{sample}.{REF}.{alner}.sorted.bam"
