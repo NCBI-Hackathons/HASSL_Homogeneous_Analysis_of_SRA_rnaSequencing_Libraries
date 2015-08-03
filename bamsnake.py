@@ -37,11 +37,18 @@ rule sam_to_bam:
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
 
-rule hisat_alignment:
-	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.log"
-	# input: "{sample}.fastq"
+
+rule hisat_alignment_two:
+	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat2.log"
+	input: "{sample}.hisat.novel.splicesite.txt"
+	message: "running second pass alignment"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat2.log"
+
+
+rule hisat_alignment_one:
+	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat1.log"
 	message: "hisat aligning reads {sample}.fastq to GRCh38.p4 with {THREADS} threads to produce {output}"
-	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.GRCh38.p4.hisat.sam 2> {sample}.hisat.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat_firstpass_tmp.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat1.log"
 
 
 # rule star_alignment: 
