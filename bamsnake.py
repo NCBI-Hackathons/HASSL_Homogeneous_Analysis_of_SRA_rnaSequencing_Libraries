@@ -56,6 +56,12 @@ rule hisat_alignment_two:
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat2.log"
 
 
+rule hisat_alignment_one: 
+	output: "{sample}.hisat.novel.splicesite.txt"
+	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} to produce splicesites"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat_firstpass_tmp.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat1.log"
+
+
 # rule hisat_alignment_one:
 # 	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat1.log", "{sample}.GRCh38.p4.hisat_firstpass_tmp.sam"
 # 	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} threads to produce new splicesites"
