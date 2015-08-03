@@ -2,6 +2,8 @@
 
 REF = 'GRCh38.p4'
 
+
+FASTAREF='/home/ubuntu/russ/ncbi/GCF_000001405.30_GRCh38.p4_genomic.fna'
 HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
 # STAR50REF = 
 # STAR100REF = 
@@ -36,7 +38,7 @@ rule bam_to_sra:
 	output: "{sample}.GRCh38.p4.hisat.sradir"
 	input: "{sample}.GRCh38.p4.hisat.bam"
 	message: "converting bam to sra: {input} to {output}"
-	shell: "bam-load -o {sample}.GRCh38.p4.hisat.sradir -k /home/ubuntu/russ/rnaseq_mapping_hackathon_v002/GCF_000001405.30_GRCh38.p4_genomic.cfg {input}"
+	shell: "bam-load -o {sample}.GRCh38.p4.hisat.sradir -k /home/ubuntu/russ/rnaseq_mapping_hackathon_v002/GCF_000001405.30_GRCh38.p4_genomic.cfg -r {FASTAREF} {input}"
 
 # rule sort_bam:
 # 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
