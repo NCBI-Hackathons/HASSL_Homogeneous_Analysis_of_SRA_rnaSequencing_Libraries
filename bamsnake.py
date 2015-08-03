@@ -1,8 +1,6 @@
 
 
 REF = 'GRCh38.p4'
-
-
 FASTAREF='/home/ubuntu/russ/ncbi/GCF_000001405.30_GRCh38.p4_genomic.fna'
 HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
 
