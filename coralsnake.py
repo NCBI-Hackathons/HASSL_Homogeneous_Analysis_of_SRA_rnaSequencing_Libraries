@@ -15,7 +15,7 @@ THREADS = 8
 rule all: 
 	input: "SRR1295542.GRCh38.p4.hisat.sorted.bam"
 
-
+sample = 'SRR1295542'
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
 
