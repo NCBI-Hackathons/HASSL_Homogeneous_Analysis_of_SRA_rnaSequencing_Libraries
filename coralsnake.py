@@ -8,12 +8,12 @@ HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
 
 
 # DATASETS = "SRR1295542".split() 
-THREADS = 10
+THREADS = 10 
 
 
 
 rule all: 
-	input: "SRR1295542.GRCh38.p4.hisat.sorted.sra"
+	input: "SRR959265.GRCh38.p4.hisat.sorted.bam"
 
 sample = 'SRR959265'
 
@@ -38,11 +38,11 @@ rule bam_to_sra:
 	message: "converting {input} bam to sra {output}"
 	shell: "bam-load -o {sample}.GRCh38.p4.{alner}.sradir -k <config-GI-file> {input}"
 
-rule sort_bam:
-	output: "{sample}.GRCh38.p4.{alner}.sorted.bam"
-	input: "{sample}.GRCh38.p4.{alner}.bam"
-	message: "sorting {intput} to {output}"
-	shell: "samtools sort {input} {output}.sorted"
+# rule sort_bam:
+# 	output: "{sample}.GRCh38.p4.{alner}.sorted.bam"
+# 	input: "{sample}.GRCh38.p4.{alner}.bam"
+# 	message: "sorting {intput} to {output}"
+# 	shell: "samtools sort {input} {output}.sorted"
 
 rule sam_to_bam:
 	output: "{sample}.GRCh38.p4.{alner}.bam"
