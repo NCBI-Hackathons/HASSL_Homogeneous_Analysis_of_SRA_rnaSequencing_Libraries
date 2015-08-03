@@ -12,14 +12,21 @@ THREADS = 10
 SAMPLES = 'SRR959265'.split()
 
 rule all: 
-	input: expand("{sample}.transferred", sample=SAMPLES)
+	input: expand("{sample}.logs.transferred", sample=SAMPLES)
 
 
 	# input: "dSRR959265.GRCh38.p4.hisat.sorted.bam"
 
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
-rule transfer_s3: 
+
+rule transfer_logs_s3: 
+	output: touch("{sample}.logs.transferred")
+	input: "{sample}.GRCh38.p4.hisat.sorted.bam", "{sample}.transferred"
+	message: "transferring {input}'s logs to S3"
+	shell: "s3cmd put {sample}.hisat1.log s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {sample}.hisat2.log s3://ncbi-hackathon-aug/rnamapping/"
+
+rule transfer_bam_s3: 
 	output: touch("{sample}.transferred")
 	input: "{sample}.GRCh38.p4.hisat.sorted.bam"
 	message: "transferring {input} to S3"
