@@ -51,23 +51,15 @@ rule sam_to_bam:
 
 rule hisat_alignment_two:
 	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat2.log"
-	input: "{sample}.hisat.novel.splicesite.txt"
+	# input: "{sample}.hisat.novel.splicesite.txt"
 	message: "running second pass alignment"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat2.log"
 
 
-rule hisat_alignment_one:
-	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat1.log", "{sample}.GRCh38.p4.hisat_firstpass_tmp.sam"
-	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} threads to produce new splicesites"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat_firstpass_tmp.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat1.log"
-
-
-# rule star_alignment: 
-# 	output: "{sample}.GRCh38.p4.star.sam"
-# 	input: "{sample}.fastq"
-# 	message: "star aligning reads {sample}.fastq to GRCh38.p4 to produce {output}"
-# 	shell: <star code> 
-
+# rule hisat_alignment_one:
+# 	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat1.log", "{sample}.GRCh38.p4.hisat_firstpass_tmp.sam"
+# 	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} threads to produce new splicesites"
+# 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat_firstpass_tmp.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat1.log"
 
 
 
