@@ -21,37 +21,37 @@ sample = 'SRR959265'
 
 
 rule kar_sra: 
-	output: "{sample}.GRCh38.p4.{alner}.sorted.sra"
-	input: "{sample}.GRCh38.p4.{alner}.sorted.sradir"
+	output: "{sample}.GRCh38.p4.hisat.sorted.sra"
+	input: "{sample}.GRCh38.p4.hisat.sorted.sradir"
 	message: "converting sradir {input} to sra archive file {output}"
 	shell: "kar -c {output} -d {input}"
 
 rule sort_sra:
-	output: "{sample}.GRCh38.p4.{alner}.sorted.sradir"
-	input: "{sample}.GRCh38.p4.{alner}.sradir"
+	output: "{sample}.GRCh38.p4.hisat.sorted.sradir"
+	input: "{sample}.GRCh38.p4.hisat.sradir"
 	message: "sorting sradir {input} to {output}" 
 	shell: "sra-sort {input} {output}"
 
 rule bam_to_sra:
-	output: "{sample}.GRCh38.p4.{alner}.sradir"
-	input: "{sample}.GRCh38.p4.{alner}.bam"
+	output: "{sample}.GRCh38.p4.hisat.sradir"
+	input: "{sample}.GRCh38.p4.hisat.bam"
 	message: "converting {input} bam to sra {output}"
-	shell: "bam-load -o {sample}.GRCh38.p4.{alner}.sradir -k <config-GI-file> {input}"
+	shell: "bam-load -o {sample}.GRCh38.p4.hisat.sradir -k <config-GI-file> {input}"
 
 # rule sort_bam:
-# 	output: "{sample}.GRCh38.p4.{alner}.sorted.bam"
-# 	input: "{sample}.GRCh38.p4.{alner}.bam"
+# 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
+# 	input: "{sample}.GRCh38.p4.hisat.bam"
 # 	message: "sorting {intput} to {output}"
 # 	shell: "samtools sort {input} {output}.sorted"
 
 rule sam_to_bam:
-	output: "{sample}.GRCh38.p4.{alner}.bam"
-	input: "{sample}.GRCh38.p4.{alner}.sam"
+	output: "{sample}.GRCh38.p4.hisat.bam"
+	input: "{sample}.GRCh38.p4.hisat.sam"
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
 
 rule hisat_alignment:
-	output: "{sample}.GRCh38.p4.{alner}.sam"
+	output: "{sample}.GRCh38.p4.hisat.sam"
 	# input: "{sample}.fastq"
 	message: "hisat aligning reads {sample}.fastq to GRCh38.p4 with {THREADS} threads to produce {output}"
 	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.GRCh38.p4.hisat.sam"
