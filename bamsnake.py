@@ -10,7 +10,7 @@ THREADS = 10
 SAMPLES = 'SRR959265'.split()
 
 rule all: 
-	input: expand("{sample}.transferred.logs", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES)
+	input: expand("{sample}.transferred.logs", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.hisat.novel.splicesite.txt", sample=SAMPLES)
 
 
 	# input: "dSRR959265.GRCh38.p4.hisat.sorted.bam"
@@ -29,6 +29,12 @@ rule transfer_bam_s3:
 	input: "{sample}.GRCh38.p4.hisat.sorted.bam"
 	message: "transferring {input} to S3"
 	shell: "s3cmd put {input} s3://ncbi-hackathon-aug/rnamapping/"
+
+rule transfer_splices_s3:
+	output: touch("{sample}.transferred.splices")
+	input: "{sample}.hisat.novel.splicesite.txt"
+	message: "transferring hisat splice sites {input} to s3"
+	shell: "s3cmd put {input} s3://ncbi-hackathon-aug/rnamapping/"	
 
 rule sort_bam:
 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
