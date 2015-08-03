@@ -1,6 +1,4 @@
 
-snakemake -s coralsnake.py 
-
 
 REF = 'GRCh38.p4'
 
