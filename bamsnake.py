@@ -22,7 +22,7 @@ rule transfer_logs_s3:
 	output: touch("{sample}.transferred.logs")
 	input:  "{sample}.hisat1.log", "{sample}.hisat2.log"
 	message: "transferring {input}'s logs to S3"
-	shell: "s3cmd put {sample}.hisat1.log s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {sample}.hisat2.log s3://ncbi-hackathon-aug/rnamapping/"
+	shell: "s3cmd put {sample}.hisat.1.log s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {sample}.hisat.2.log s3://ncbi-hackathon-aug/rnamapping/"
 
 rule transfer_bam_s3: 
 	output: touch("{sample}.transferred")
@@ -50,16 +50,16 @@ rule sam_to_bam:
 
 
 rule hisat_alignment_two:
-	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat2.log"
+	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.2.log"
 	input: "{sample}.hisat.novel.splicesite.txt"
 	message: "running second pass alignment"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat2.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.2.log"
 
 
 rule hisat_alignment_one: 
-	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat1.log"
+	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat.1.log"
 	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} to produce splicesites"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat_firstpass_tmp.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat1.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S tmp.{sample}.GRCh38.p4.firstpass.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.1.log"
 
 
 # rule hisat_alignment_one:
