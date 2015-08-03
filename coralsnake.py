@@ -13,7 +13,7 @@ THREADS = 10
 
 
 rule all: 
-	input: "SRR959265.GRCh38.p4.hisat.sorted.bam"
+	input: "SRR959265.GRCh38.p4.hisat.sorted.sra"
 
 sample = 'SRR959265'
 
