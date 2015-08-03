@@ -18,7 +18,7 @@ THREADS = 8
 sample = "SRR1295542" 
 
 rule all: 
-	input: "{sample}.{REF}.{alner}.sorted.bam"
+	input: "SRR1295542.{REF}.{alner}.sorted.bam"
 
 
 
