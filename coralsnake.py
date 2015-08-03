@@ -42,7 +42,7 @@ rule sam_to_bam:
 
 rule hisat_alignment:
 	output: "{sample}.{REF}.hisat.sam"
-	input: "{sample}.fastq"
+	# input: "{sample}.fastq"
 	message: "hisat aligning reads {sample}.fastq to {REF} to produce {output}"
 	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.{REF}.hisat.sam"
 
