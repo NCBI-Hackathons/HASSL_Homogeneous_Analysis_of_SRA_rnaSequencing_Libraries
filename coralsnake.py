@@ -35,8 +35,8 @@ rule sort_sra:
 rule bam_to_sra:
 	output: "{sample}.GRCh38.p4.hisat.sradir"
 	input: "{sample}.GRCh38.p4.hisat.bam"
-	message: "converting {input} bam to sra {output}"
-	shell: "bam-load -o {sample}.GRCh38.p4.hisat.sradir {input}"
+	message: "converting bam to sra: {input} to {output}"
+	shell: "bam-load -o {sample}.GRCh38.p4.hisat.sradir -k /home/ubuntu/russ/rnaseq_mapping_hackathon_v002/GCF_000001405.30_GRCh38.p4_genomic.cfg {input}"
 
 # rule sort_bam:
 # 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
@@ -51,10 +51,10 @@ rule sam_to_bam:
 	shell: "samtools view -bS {input} > {output}"
 
 rule hisat_alignment:
-	output: "{sample}.GRCh38.p4.hisat.sam"
+	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.log"
 	# input: "{sample}.fastq"
 	message: "hisat aligning reads {sample}.fastq to GRCh38.p4 with {THREADS} threads to produce {output}"
-	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.GRCh38.p4.hisat.sam"
+	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.GRCh38.p4.hisat.sam 2> {sample}.hisat.log"
 
 
 # rule star_alignment: 
