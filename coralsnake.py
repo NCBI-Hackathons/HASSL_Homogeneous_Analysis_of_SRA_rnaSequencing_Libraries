@@ -36,7 +36,7 @@ rule bam_to_sra:
 	output: "{sample}.GRCh38.p4.hisat.sradir"
 	input: "{sample}.GRCh38.p4.hisat.bam"
 	message: "converting {input} bam to sra {output}"
-	shell: "bam-load -o {sample}.GRCh38.p4.hisat.sradir -k <config-GI-file> {input}"
+	shell: "bam-load -o {sample}.GRCh38.p4.hisat.sradir {input}"
 
 # rule sort_bam:
 # 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
