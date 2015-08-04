@@ -11,7 +11,7 @@ filename = "/home/ubuntu/accessions"
 SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 rule all: 
-	input: expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES), expand("{sample}.transferred.qual_check", sample=SAMPLES)
+	input: expand("{sample}.transferred.counts", sample=SAMPLES), expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES), expand("{sample}.transferred.qual_check", sample=SAMPLES)
 
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
