@@ -7,7 +7,7 @@ HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
 # DATASETS = "SRR1295542".split() 
 # THREADS = 10 
 
-SAMPLES = 'SRR2089122'.split()
+SAMPLES = 'SRR2105573'.split()
 
 rule all: 
 	input: expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
