@@ -1,7 +1,7 @@
 
 
 REF = 'GRCh38.p4'
-FASTAREF='/home/ubuntu/russ/ncbi/GCF_000001405.30_GRCh38.p4_genomic.fna'
+# FASTAREF='/home/ubuntu/russ/ncbi/GCF_000001405.30_GRCh38.p4_genomic.fna'
 HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
 
 # DATASETS = "SRR1295542".split() 
@@ -59,7 +59,7 @@ rule hisat_alignment_one:
 	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log"
 	threads: 10 
 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.p4 with {threads} threads to produce splicesites"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} --mm -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt > /dev/null  2> {wildcards.sample}.hisat.one.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} --mm -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.p4.hisat.one.sam  2> {wildcards.sample}.hisat.one.log"
 
 
 
