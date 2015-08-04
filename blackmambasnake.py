@@ -51,7 +51,7 @@ rule perform_counting:
 	output: "{sample}.GRCh38.p4.HTSeq.counts"
 	input: "{sample}.GRCh38.p4.hisat.sorted.bam.bai"
 	message: "performing counting of reads on genes in {input}"
-	shell: "~/HTSeq-0.6.1/build/scripts-2.7/htseq-count -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.p4.hisat.sorted.bam ~/refs/GCF_000001405.30_GRCh38.p4_genomic.gff"
+	shell: "~/HTSeq-0.6.1/build/scripts-2.7/htseq-count -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.p4.hisat.sorted.bam ~/refs/GCF_000001405.30_GRCh38.p4_genomic.gff > {wildcards.sample}.GRCh38.p4.HTSeq.counts 2> counting.err"
 
 
 rule qc_check: 
