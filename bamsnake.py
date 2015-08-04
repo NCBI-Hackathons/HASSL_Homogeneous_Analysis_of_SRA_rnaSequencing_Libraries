@@ -7,7 +7,8 @@ HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
 # DATASETS = "SRR1295542".split() 
 # THREADS = 10 
 
-SAMPLES = 'SRR2105573'.split()
+filename = "/home/ubuntu/accessions"
+SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 rule all: 
 	input: expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
@@ -32,7 +33,6 @@ rule transfer_splices_s3:
 	input: "{sample}.hisat.novel.splicesites.txt"
 	message: "transferring hisat splice sites {input} to s3"
 	shell: "s3cmd put {input} s3://ncbi-hackathon-aug/rnamapping/"	
-
 
 rule sort_bam:
 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
