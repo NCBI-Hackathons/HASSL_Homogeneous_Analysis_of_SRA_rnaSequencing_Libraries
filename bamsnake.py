@@ -38,7 +38,7 @@ rule sort_bam:
 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
 	input: "{sample}.GRCh38.p4.hisat.bam"
 	message: "sorting {input} to {output}"
-	shell: "samtools sort {input} {output}.sorted"
+	shell: "samtools sort {input} {wildcards.sample}.GRCh38.p4.hisat.sorted"
 
 rule sam_to_bam:
 	output: "{sample}.GRCh38.p4.hisat.bam"
