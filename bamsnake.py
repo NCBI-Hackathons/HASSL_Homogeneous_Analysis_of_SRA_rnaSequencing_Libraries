@@ -37,7 +37,7 @@ rule transfer_splices_s3:
 rule sort_bam:
 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
 	input: "{sample}.GRCh38.p4.hisat.bam"
-	message: "sorting {intput} to {output}"
+	message: "sorting {input} to {output}"
 	shell: "samtools sort {input} {output}.sorted"
 
 rule sam_to_bam:
