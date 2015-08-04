@@ -10,16 +10,16 @@ THREADS = 10
 SAMPLES = 'SRR2089122'.split()
 
 rule all: 
-	input: expand("{sample}.transferred.logs", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
+	input: expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
 
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
 
 rule transfer_logs_s3: 
-	output: touch("{sample}.transferred.logs")
-	input:  "{sample}.hisat.1.log", "{sample}.hisat.2.log"
+	output: touch("{sample}.transferred.log")
+	input:  "{sample}.hisat.log"
 	message: "transferring {input}'s logs to S3"
-	shell: "s3cmd put {sample}.hisat.1.log s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {sample}.hisat.2.log s3://ncbi-hackathon-aug/rnamapping/"
+	shell: "s3cmd put {sample}.hisat.1.log s3://ncbi-hackathon-aug/rnamapping/"
 
 rule transfer_bam_s3: 
 	output: touch("{sample}.transferred")
@@ -32,6 +32,7 @@ rule transfer_splices_s3:
 	input: "{sample}.hisat.novel.splicesite.txt"
 	message: "transferring hisat splice sites {input} to s3"
 	shell: "s3cmd put {input} s3://ncbi-hackathon-aug/rnamapping/"	
+
 
 rule sort_bam:
 	output: "{sample}.GRCh38.p4.hisat.sorted.bam"
@@ -50,13 +51,13 @@ rule hisat_alignment_two:
 	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.2.log"
 	input: "{sample}.hisat.novel.splicesite.txt"
 	message: "running second pass alignment"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.2.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2>> {sample}.hisat.log"
 
 
 rule hisat_alignment_one: 
 	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat.1.log"
 	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} to produce splicesites"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.firstpass.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.1.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.firstpass.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.log"
 
 
 
