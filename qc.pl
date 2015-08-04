@@ -64,6 +64,9 @@ while (<$MET>) {
       foreach (keys %$defaults) {
         if ($defaults->{$_}{h} eq $h[$i]) {
           $actual{$_} = $f[$i];
+          if ($actual{$_} eq '?'){
+            $actual{$_}=1.0;
+          }
         }
       }   
     }

@@ -11,10 +11,13 @@ filename = "/home/ubuntu/accessions"
 SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 rule all: 
-	input: expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES), expand("{sample}.transferred.qual_check", sample=SAMPLES)
+	input: expand("{sample}.transferred.counts", sample=SAMPLES), expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES), expand("{sample}.transferred.qual_check", sample=SAMPLES)
 
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
+
+rule clean: 
+	shell: "rm -fr SRR*"
 
 rule transfer_logs_s3: 
 	output: touch("{sample}.transferred.log")
@@ -38,7 +41,19 @@ rule transfer_qual_check:
 	output: touch("{sample}.transferred.qual_check")
 	input: "{sample}.qc_check.done"
 	message: "transferring qual_check output to S3"
-	shell: "s3cmd put {wildcards.sample}.pass s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {wildcards.sample}.fail s3://ncbi-hackathon-aug/rnamapping/"
+	shell: "s3cmd put {wildcards.sample}.GRCh38.p4.hisat.crsm s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {wildcards.sample}.pass s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {wildcards.sample}.fail s3://ncbi-hackathon-aug/rnamapping/"
+
+rule transfer_counts: 
+	output: touch("{sample}.transferred.counts")
+	input: "{sample}.GRCh38.p4.HTSeq.counts"
+	message: "transferring {input} counts to s3 "
+	shell: "s3cmd put {input} s3://ncbi-hackathon-aug/rnamapping/"
+
+rule perform_counting: 
+	output: "{sample}.GRCh38.p4.HTSeq.counts"
+	input: "{sample}.GRCh38.p4.hisat.sorted.bam.bai"
+	message: "performing counting of reads on genes in {input}"
+	shell: "~/HTSeq-0.6.1/build/scripts-2.7/htseq-count -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.p4.hisat.sorted.bam ~/refs/GCF_000001405.30_GRCh38.p4_genomic.gff > {wildcards.sample}.GRCh38.p4.HTSeq.counts 2> counting.err"
 
 rule qc_check: 
 	output: touch("{sample}.qc_check.done")
@@ -65,22 +80,21 @@ rule sort_bam:
 	shell: "samtools sort {input} {wildcards.sample}.GRCh38.p4.hisat.sorted"
 
 rule sam_to_bam:
-	output: "{sample}.GRCh38.p4.hisat.bam"
+	output: temp("{sample}.GRCh38.p4.hisat.bam")
 	input: "{sample}.GRCh38.p4.hisat.sam"
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
 
-
 rule hisat_alignment_two:
-	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.two.log"
+	output: temp("{sample}.GRCh38.p4.hisat.sam"), "{sample}.hisat.two.log"
 	input: "{sample}.hisat.novel.splicesites.txt"
-	threads: 10
+	threads: 12
 	message: "running second pass hisat alignment with {threads} threads"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesite.txt 2> {wildcards.sample}.hisat.two.log"
 
 rule hisat_alignment_one: 
-	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", "{sample}.GRCh38.p4.hisat.one.sam"
-	threads: 10 
+	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", temp("{sample}.GRCh38.p4.hisat.one.sam")
+	threads: 12
 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.p4 with {threads} threads to produce splicesites"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.p4.hisat.one.sam  2> {wildcards.sample}.hisat.one.log"
 
