@@ -31,7 +31,7 @@ rule sam_to_bam:
 
 rule hisat_alignment_two:
 	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.GRCh38.p4.hisat.two.log"
-	input: "{sample}.hisat.novel.splicesites.txt"
+	input: "{sample}.GRCh38.p4.hisat.novel.splicesites.txt"
 	threads: 10
 	message: "running second pass hisat alignment with {threads} threads"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.two.log"
