@@ -44,7 +44,7 @@ rule transfer_qual_check:
 rule transfer_counts: 
 	output: touch("{sample}.transferred.counts")
 	input: "{sample}.GRCh38.p4.HTSeq.counts"
-	mesage: "transferring {input} counts to s3 "
+	message: "transferring {input} counts to s3 "
 	shell: "s3cmd put {input} s3://ncbi-hackathon-aug/rnamapping/"
 
 rule perform_counting: 
