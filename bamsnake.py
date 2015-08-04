@@ -58,6 +58,7 @@ rule hisat_alignment_two:
 
 rule hisat_alignment_one: 
 	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat.1.log"
+	input: "{sample}.path"
 	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} to produce splicesites"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S tmp.{sample}.GRCh38.p4.firstpass.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.1.log"
 
