@@ -50,7 +50,7 @@ rule picard_rnaseq_qual:
 	output: "{sample}.GRCh38.p4.hisat.crsm"
 	input: "{sample}.GRCh38.p4.hisat.sorted.bam.bai"
 	message: "running picard rna qc stats on {input}"
-	shell: "java -jar ~/opt/picard-tools-1.137/picard.jar CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={wildcards.sample}.GRCh38.p4.hisat.sorted.bam OUTPUT={output}"
+	shell: "java -jar ~/picard-tools-1.137/picard.jar CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={wildcards.sample}.GRCh38.p4.hisat.sorted.bam OUTPUT={output}"
 
 rule index_bam: 
 	output: "{sample}.GRCh38.p4.hisat.sorted.bam.bai"
@@ -77,7 +77,6 @@ rule hisat_alignment_two:
 	threads: 10
 	message: "running second pass hisat alignment with {threads} threads"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesite.txt 2> {wildcards.sample}.hisat.two.log"
-
 
 rule hisat_alignment_one: 
 	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", "{sample}.GRCh38.p4.hisat.one.sam"
