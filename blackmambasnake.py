@@ -41,6 +41,19 @@ rule transfer_qual_check:
 	message: "transferring qual_check output to S3"
 	shell: "s3cmd put {wildcards.sample}.GRCh38.p4.hisat.crsm s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {wildcards.sample}.pass s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {wildcards.sample}.fail s3://ncbi-hackathon-aug/rnamapping/"
 
+rule transfer_counts: 
+	output: touch("{sample}.transferred.counts")
+	input: "{sample}.GRCh38.p4.HTSeq.counts"
+	mesage: "transferring {input} counts to s3 "
+	shell: "s3cmd put {input} s3://ncbi-hackathon-aug/rnamapping/"
+
+rule perform_counting: 
+	output: "{sample}.GRCh38.p4.HTSeq.counts"
+	input: "{sample}.GRCh38.p4.hisat.sorted.bam.bai"
+	message: "performing counting of reads on genes in {input}"
+	shell: "~/HTSeq-0.6.1/build/scripts-2.7/htseq-count -m intersection-nonempty -i gene -s no -f bam {sample}.GRCh38.p4.hisat.sorted.bam ~/refs/GCF_000001405.30_GRCh38.p4_genomic.gff"
+
+
 rule qc_check: 
 	output: touch("{sample}.qc_check.done")
 	input: "{sample}.GRCh38.p4.hisat.crsm"
