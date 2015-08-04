@@ -52,14 +52,14 @@ rule hisat_alignment_two:
 	input: "{sample}.hisat.novel.splicesites.txt"
 	threads: 10
 	message: "running second pass hisat alignment with {threads} threads"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} --mm -t -S {wildcards.sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesite.txt 2> {wildcards.sample}.hisat.two.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesite.txt 2> {wildcards.sample}.hisat.two.log"
 
 
 rule hisat_alignment_one: 
 	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", "{sample}.GRCh38.p4.hisat.one.sam"
 	threads: 10 
 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.p4 with {threads} threads to produce splicesites"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} --mm -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.p4.hisat.one.sam  2> {wildcards.sample}.hisat.one.log"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.p4.hisat.one.sam  2> {wildcards.sample}.hisat.one.log"
 
 
 
