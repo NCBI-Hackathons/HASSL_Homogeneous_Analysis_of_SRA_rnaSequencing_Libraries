@@ -1,7 +1,15 @@
 
 rule all:
-	input: "ncbirefflat.txt", "GCF_000001405.30_GRCh38.p4_genomic.fna"
+	input: "ncbirefflat.txt","GRCh38.p4.1.bt2"#, "GRCh38.p4.3.bt2", "GRCh38.p4.5.bt2", "GRCh38.p4.rev.1.bt2", "GRCh38.p4.rev.5.bt2",
+#	        "GRCh38.p4.2.bt2", "GRCh38.p4.4.bt2", "GRCh38.p4.6.bt2", "GRCh38.p4.rev.2.bt2", "GRCh38.p4.rev.6.bt2"
 
+
+rule index:
+	output: "GRCh38.p4.1.bt2"#, "GRCh38.p4.3.bt2", "GRCh38.p4.5.bt2", "GRCh38.p4.rev.1.bt2", "GRCh38.p4.rev.5.bt2",
+#	        "GRCh38.p4.2.bt2", "GRCh38.p4.4.bt2", "GRCh38.p4.6.bt2", "GRCh38.p4.rev.2.bt2", "GRCh38.p4.rev.6.bt2"
+	input: "GCF_000001405.30_GRCh38.p4_genomic.fna"
+	message: "indexing human genome"
+	shell: "hisat-build {input} GRCh38.p4"
 
 rule gunzipHumRef:
 	output: "GCF_000001405.30_GRCh38.p4_genomic.fna" 
