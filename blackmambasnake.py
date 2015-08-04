@@ -38,7 +38,7 @@ rule transfer_qual_check:
 	output: touch("{sample}.transferred.qual_check")
 	input: "{sample}.qc_check.done"
 	message: "transferring qual_check output to S3"
-	shell: "s3cmd put {sample}.pass s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {sample}.fail s3://ncbi-hackathon-aug/rnamapping/"
+	shell: "s3cmd put {wildcards.sample}.pass s3://ncbi-hackathon-aug/rnamapping/; s3cmd put {wildcards.sample}.fail s3://ncbi-hackathon-aug/rnamapping/"
 
 rule qc_check: 
 	output: touch("{sample}.qc_check.done")
