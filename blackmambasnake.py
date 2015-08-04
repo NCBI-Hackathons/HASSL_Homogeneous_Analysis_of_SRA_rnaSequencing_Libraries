@@ -16,6 +16,8 @@ rule all:
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
 
+rule clean: 
+	shell: "rm -fr SRR*"
 
 rule transfer_logs_s3: 
 	output: touch("{sample}.transferred.log")
@@ -53,7 +55,6 @@ rule perform_counting:
 	message: "performing counting of reads on genes in {input}"
 	shell: "~/HTSeq-0.6.1/build/scripts-2.7/htseq-count -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.p4.hisat.sorted.bam ~/refs/GCF_000001405.30_GRCh38.p4_genomic.gff > {wildcards.sample}.GRCh38.p4.HTSeq.counts 2> counting.err"
 
-
 rule qc_check: 
 	output: touch("{sample}.qc_check.done")
 	input: "{sample}.GRCh38.p4.hisat.crsm"
@@ -80,7 +81,7 @@ rule sort_bam:
 
 rule sam_to_bam:
 	output: "{sample}.GRCh38.p4.hisat.bam"
-	input: "{sample}.GRCh38.p4.hisat.sam"
+	input: temp("{sample}.GRCh38.p4.hisat.sam")
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
 
