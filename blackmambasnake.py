@@ -50,7 +50,7 @@ rule picard_rnaseq_qual:
 	output: "{sample}.GRCh38.p4.hisat.crsm"
 	input: "{sample}.GRCh38.p4.hisat.sorted.bam.bai"
 	message: "running picard rna qc stats on {input}"
-	shell: "java -jar ~/opt/picard-tools-1.137/picard.jar CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={sample}.GRCh38.p4.hisat.sorted.bam OUTPUT={output}"
+	shell: "java -jar ~/opt/picard-tools-1.137/picard.jar CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={wildcards.sample}.GRCh38.p4.hisat.sorted.bam OUTPUT={output}"
 
 rule index_bam: 
 	output: "{sample}.GRCh38.p4.hisat.sorted.bam.bai"
