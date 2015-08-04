@@ -47,10 +47,10 @@ rule sam_to_bam:
 	shell: "samtools view -bS {input} > {output}"
 
 rule hisat_alignment:
-	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.log"
+	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.log", "{sample}.hisat.novel.splicesites.txt"
 	# input: "{sample}.fastq"
 	message: "hisat aligning reads {sample}.fastq to GRCh38.p4 with {THREADS} threads to produce {output}"
-	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} -S {sample}.GRCh38.p4.hisat.sam 2> {sample}.hisat.log"
+	shell: "hisat -x {HISATREF} -p {THREADS} --sra-acc {sample} --novel-splicesite-outfile {sample}.hisat.novel.splicesites.txt -S {sample}.GRCh38.p4.hisat.sam 2> {sample}.hisat.log"
 
 
 # rule hisat_alignment_two:
