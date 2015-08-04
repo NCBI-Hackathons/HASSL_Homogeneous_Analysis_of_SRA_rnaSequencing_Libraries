@@ -81,10 +81,9 @@ rule sort_bam:
 
 rule sam_to_bam:
 	output: "{sample}.GRCh38.p4.hisat.bam"
-	input: temp("{sample}.GRCh38.p4.hisat.sam")
+	input: "{sample}.GRCh38.p4.hisat.sam"
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
-
 
 rule hisat_alignment_two:
 	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.two.log"
