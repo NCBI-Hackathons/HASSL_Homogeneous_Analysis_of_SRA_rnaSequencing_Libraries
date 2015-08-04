@@ -40,8 +40,8 @@ rule hisat_alignment_two:
 rule hisat_alignment_one: 
 	output: "{sample}.GRCh38.p4.hisat.novel.splicesites.txt", "{sample}.GRCh38.p4.hisat.one.log"
 	threads: 10 
-	message: "hisat aligning reads from {sample} to GRCh38.p4 with {threads} threads to produce splicesites"
-	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} --mm -t --novel-splicesite-outfile {wildcards.sample}.GRCh38.p4.hisat.novel.splicesites.txt > /dev/null  2> {sample}.GRCh38.p4.hisat.one.log"
+	message: "hisat aligning reads from {wildcards.sample} to GRCh38.p4 with {threads} threads to produce splicesites"
+	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} --mm -t --novel-splicesite-outfile {wildcards.sample}.GRCh38.p4.hisat.novel.splicesites.txt > /dev/null  2> {wildcards.sample}.GRCh38.p4.hisat.one.log"
 
 
 
