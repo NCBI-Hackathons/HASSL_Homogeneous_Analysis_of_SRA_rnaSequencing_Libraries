@@ -10,7 +10,7 @@ THREADS = 10
 SAMPLES = 'SRR2089122'.split()
 
 rule all: 
-	input: expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
+	input: expand("{sample}.GRCh38.p4.hisat.sam", sample=SAMPLES), expand("{sample}.hisat.novel.splicesites.txt", sample=SAMPLES), expand("{sample}.transferred.log", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
 
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
