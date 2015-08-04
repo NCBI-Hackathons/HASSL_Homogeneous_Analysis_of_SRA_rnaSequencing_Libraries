@@ -10,10 +10,7 @@ THREADS = 10
 SAMPLES = 'SRR2089122'.split()
 
 rule all: 
-	input: expand("{sample}.hisat.1.log", sample=SAMPLES), expand("{sample}.transferred.logs", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
-
-
-	# input: "dSRR959265.GRCh38.p4.hisat.sorted.bam"
+	input: expand("{sample}.transferred.logs", sample=SAMPLES), expand("{sample}.transferred", sample=SAMPLES), expand("{sample}.transferred.splices", sample=SAMPLES)
 
 
 # SRA -> PILEUP -> RAW COUNTS OFF NCBI GFF3 
@@ -58,16 +55,8 @@ rule hisat_alignment_two:
 
 rule hisat_alignment_one: 
 	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat.1.log"
-	input: "{sample}.path"
 	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} to produce splicesites"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S tmp.{sample}.GRCh38.p4.firstpass.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat.1.log"
-
-
-# rule hisat_alignment_one:
-# 	output: "{sample}.hisat.novel.splicesite.txt", "{sample}.hisat1.log", "{sample}.GRCh38.p4.hisat_firstpass_tmp.sam"
-# 	message: "hisat aligning reads from {sample} to GRCh38.p4 with {THREADS} threads to produce new splicesites"
-# 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {THREADS} --sra-acc {sample} --mm -t -S {sample}.GRCh38.p4.hisat_firstpass_tmp.sam --novel-splicesite-outfile {sample}.hisat.novel.splicesite.txt 2> {sample}.hisat1.log"
-
 
 
 
