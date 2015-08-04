@@ -80,21 +80,21 @@ rule sort_bam:
 	shell: "samtools sort {input} {wildcards.sample}.GRCh38.p4.hisat.sorted"
 
 rule sam_to_bam:
-	output: "{sample}.GRCh38.p4.hisat.bam"
+	output: temp("{sample}.GRCh38.p4.hisat.bam")
 	input: "{sample}.GRCh38.p4.hisat.sam"
 	message: "converting sam to bam: {input} to {output}"
 	shell: "samtools view -bS {input} > {output}"
 
 rule hisat_alignment_two:
-	output: "{sample}.GRCh38.p4.hisat.sam", "{sample}.hisat.two.log"
+	output: temp("{sample}.GRCh38.p4.hisat.sam"), "{sample}.hisat.two.log"
 	input: "{sample}.hisat.novel.splicesites.txt"
-	threads: 10
+	threads: 12
 	message: "running second pass hisat alignment with {threads} threads"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.p4.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesite.txt 2> {wildcards.sample}.hisat.two.log"
 
 rule hisat_alignment_one: 
-	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", "{sample}.GRCh38.p4.hisat.one.sam"
-	threads: 10 
+	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", temp("{sample}.GRCh38.p4.hisat.one.sam")
+	threads: 12
 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.p4 with {threads} threads to produce splicesites"
 	shell: "hisat -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.p4.hisat.one.sam  2> {wildcards.sample}.hisat.one.log"
 

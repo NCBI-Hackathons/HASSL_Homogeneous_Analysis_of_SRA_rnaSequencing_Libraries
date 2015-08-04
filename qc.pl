@@ -65,7 +65,7 @@ while (<$MET>) {
         if ($defaults->{$_}{h} eq $h[$i]) {
           $actual{$_} = $f[$i];
           if ($actual{$_} eq '?'){
-            $actual{$_}=1.0
+            $actual{$_}=1.0;
           }
         }
       }   
