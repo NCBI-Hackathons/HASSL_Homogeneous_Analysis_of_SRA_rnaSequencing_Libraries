@@ -1,13 +1,13 @@
-# RNAseq analysis pipeline
+# HISS - Homogeneous Analysis of SRA RNAseq libraries
 
-This snakemake pipeline is designed to take SRA run accession numbers and
+HISS is a snakemake pipeline designed to take SRA run accession numbers and
 output both sorted bam alignments and raw read counts for an infinite number
 of samples.
 
 
 ## Setup your environment
 
-We've included a handy setupsnake.py tool to gather references and build the
+HISS includes a handy setupsnake.py tool to gather references and build the
 hisat index for you.  This will put the GRCh38.p4 reference and annotation
 files in the `lib` directory and build the hisat index there as well.
 
@@ -26,7 +26,7 @@ Then run setup:
 ## Run the pipeline
 
 Edit `cobrasnake.py` file to reflect the locations of your reference files
-and executables that snakemake will use.  The default location is the `lib`
+and executables that HISS will use.  The default location is the `lib`
 directory where `setupsnake.py` puts them.  Also, you may want to adjust the
 threads to be equal to or less than the number of threads on your computer. 
 The variables that you need to examine are:
