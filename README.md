@@ -1,13 +1,32 @@
-# HISS - Homogeneous Analysis of SRA RNAseq libraries
+# HASSL - Homogeneous Analysis of SRA RNAseq libraries
 
-HISS is a snakemake pipeline designed to take SRA run accession numbers and
+HASSL is a snakemake pipeline designed to take SRA run accession numbers and
 output both sorted bam alignments and raw read counts for an infinite number
 of samples.
+
+## For the lazy
+```
+snakemake -s setupsnake.py -j
+echo SRR1200675 > ~/accessions.txt
+snakemake -s cobrasnake.py -j
+```
+
+This will produce the following output files:
+
+* SRR1200675.GRCh38.p4.hisat.sorted.bam - HISAT 2-pass mapped BAM file of the reads from SRR1200675
+* SRR1200675.hisat.novel.splicesites.txt - HISAT generated file of denovo splicesites
+* SRR1200675.hisat.one.log - HISAT log file from the first pass
+* SRR1200675.hisat.two.log - HISAT log file form the second pass
+* SRR1200675.GRCh38.p4.hisat.crsm - Picard CollectRnaSeqMetrics output file
+* SRR1200675.pass - based on the Picard output file, this BAM file passed QC cutoffs
+* SRR1200675.GRCh38.p4.HTSeq.counts - HTSeq raw count file
+
+The raw gene counts will be in a file called SRR1200675.GRCh38.p4.HTSeq.counts
 
 
 ## Setup your environment
 
-HISS includes a handy setupsnake.py tool to gather references and build the
+HASSL includes a handy setupsnake.py tool to gather references and build the
 hisat index for you.  This will put the GRCh38.p4 reference and annotation
 files in the `lib` directory and build the hisat index there as well.
 
@@ -26,7 +45,7 @@ Then run setup:
 ## Run the pipeline
 
 Edit `cobrasnake.py` file to reflect the locations of your reference files
-and executables that HISS will use.  The default location is the `lib`
+and executables that HASSL will use.  The default location is the `lib`
 directory where `setupsnake.py` puts them.  Also, you may want to adjust the
 threads to be equal to or less than the number of threads on your computer. 
 The variables that you need to examine are:
@@ -39,8 +58,6 @@ The variables that you need to examine are:
 * PICARD
 * HTSEQ
 * SAMTOOLS
-
-The default number of threads (variable `THREADS`) is set to 12.  
 
 Isolate the run_accession IDs from SRA you want to run and put them in a
 file line by line.  Do not leave any lines blank.  The pipeline defaults to
