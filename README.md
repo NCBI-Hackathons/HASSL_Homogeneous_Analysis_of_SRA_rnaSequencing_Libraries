@@ -73,5 +73,5 @@ samtools, HTSEQ (htseq-count), perl
 
 You'll want to refer to the snakemake documentation on how to (trivially!)
 run snakemake efficiently in a cluster environment that requires
-jobsubmission.
+job submission.
 
