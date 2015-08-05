@@ -25,7 +25,6 @@ Then run `setupsnake.py`
 	snakemake -s setupsnake.py -j 
 
 
-
 ## RUN PIPELINE
 
 Edit `cobrasnake.py` file to reflect the locations of your reference files
