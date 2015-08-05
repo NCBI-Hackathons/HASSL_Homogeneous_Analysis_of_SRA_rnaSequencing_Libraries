@@ -1,3 +1,5 @@
+#SCRIPT TO GATHER REFERENCES AND ANNOTATION FILES FOR COBRASNAKE RNASEQ PIPELINE
+
 rule all:
 	input: "lib/ncbirefflat.txt",
 		"lib/GCF_000001405.30_GRCh38.p4_genomic.gff",
@@ -41,7 +43,7 @@ rule convert_refflat:
 	output: "lib/ncbirefflat.txt"
 	input: "lib/refFlat.txt"
 	message: "running refflat converter"
-	shell: "refflat2ncbi_refflat.pl {input} > {output}"
+	shell: "perl refflat2ncbi_refflat.pl {input} > {output}"
 
 rule gunzip_refflat:
 	output: temp("lib/refFlat.txt")
