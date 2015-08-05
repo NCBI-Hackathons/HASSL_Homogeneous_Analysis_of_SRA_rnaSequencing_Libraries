@@ -5,7 +5,7 @@ output both sorted bam alignments and raw read counts for an infinite number
 of samples.
 
 
-## SETUP ENVIRONMENT
+## Setup your environment
 
 We've included a handy setupsnake.py tool to gather references and build the
 hisat index for you.  This will put the GRCh38.p4 reference and annotation
@@ -23,7 +23,7 @@ Then run setup:
 `snakemake -s setupsnake.py -j `
 
 
-## RUN PIPELINE
+## Run the pipeline
 
 Edit `cobrasnake.py` file to reflect the locations of your reference files
 and executables that snakemake will use.  The default location is the `lib`
@@ -43,8 +43,8 @@ The variables that you need to examine are:
 The default number of threads (variable `THREADS`) is set to 12.  
 
 Isolate the run_accession IDs from SRA you want to run and put them in a
-file line by line.  The pipeline defaults to look for this input file
-as `~/accessions.txt`
+file line by line.  Do not leave any lines blank.  The pipeline defaults to
+look for this input file as `~/accessions.txt`.
 
 Run it! You'll probably want to be on a fairly large machine for this (16 cpus)
 
