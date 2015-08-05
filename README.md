@@ -1,4 +1,4 @@
-# HASSL - Homogeneous Analysis of SRA RNAseq libraries
+# HASSL - Homogeneous Analysis of SRA RNAseq Libraries
 
 HASSL is a snakemake pipeline designed to take SRA run accession numbers and
 output both sorted bam alignments and raw read counts for an infinite number
