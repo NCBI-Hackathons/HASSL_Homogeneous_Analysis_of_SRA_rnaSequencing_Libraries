@@ -4,7 +4,7 @@ HASSL is a snakemake pipeline designed to take SRA run accession numbers and
 output both sorted bam alignments and raw read counts for an infinite number
 of samples.
 
-## For the lazy
+## For the lazy (not a hassle if you have all the dependencies installed ;)
 ```
 snakemake -s setupsnake.py -j
 echo SRR1200675 > ~/accessions.txt
@@ -20,8 +20,6 @@ This will produce the following output files:
 * SRR1200675.GRCh38.p4.hisat.crsm - Picard CollectRnaSeqMetrics output file
 * SRR1200675.pass - based on the Picard output file, this BAM file passed QC cutoffs
 * SRR1200675.GRCh38.p4.HTSeq.counts - HTSeq raw count file
-
-The raw gene counts will be in a file called SRR1200675.GRCh38.p4.HTSeq.counts
 
 
 ## Setup your environment
