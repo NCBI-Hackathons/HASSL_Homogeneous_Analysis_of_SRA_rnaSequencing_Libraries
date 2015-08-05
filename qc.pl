@@ -18,15 +18,15 @@ die "Need to define maplogfile (--maplogfile)\n" if !$o->{maplogfile};
 die "Need to define metricsfile (--metricsfile)\n" if !$o->{metricsfile};
 die "Need to define sra (--sra)\n" if !$o->{sra};
 
-my $defaults = {pctmapped => {h => '', d => 0.75},
+my $defaults = {pctmapped => {h => '', d => 0.65},
                   pctcoding => {h => 'PCT_CODING_BASES', d => 0},
                   pctutr => {h=>'PCT_UTR_BASES', d=>0},
                   pctintron => {h=>'PCT_INTRONIC_BASES',d=>0.15},
-                  pctintergenic => {h=>'PCT_INTERGENIC_BASES',d=>0.15},
-                  pctmrna => {h=>'PCT_MRNA_BASES', d=>0},
-                  pctusable => {h=>'PCT_USABLE_BASES',d=>0},
+                  pctintergenic => {h=>'PCT_INTERGENIC_BASES',d=>1},
+                  pctmrna => {h=>'PCT_MRNA_BASES', d=>0.65},
+                  pctusable => {h=>'PCT_USABLE_BASES',d=>0.60},
                   pctcorrect => {h=>'PCT_CORRECT_STRAND_READS',d=>0},
-                  pctbias53 => {h=>'MEDIAN_5PRIME_TO_3PRIME_BIAS',d=>0.8},
+                  pctbias53 => {h=>'MEDIAN_5PRIME_TO_3PRIME_BIAS',d=>0},
                   };
 #print Dumper ($defaults), "\n";
 
