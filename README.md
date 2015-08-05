@@ -9,7 +9,9 @@ To use:
 
 SETUP ENVIRONMENT
 
-We've included a handy setupsnake.py tool to gather references and build the hisat index for you. This will put the GRCh38.p4 reference and annotation files in the lib directory and build the hisat index there as well. 
+We've included a handy setupsnake.py tool to gather references and build the
+hisat index for you.  This will put the GRCh38.p4 reference and annotation
+files in the `lib` directory and build the hisat index there as well.
 
 dependencies: snakemake, hisat-build, gunzip, wget
 
