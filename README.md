@@ -29,7 +29,7 @@ hisat index for you.  This will put the GRCh38.p4 reference and annotation
 files in the `lib` directory and build the hisat index there as well.
 
 You will need to install the following before running `setupsnake.py`
-* [snakemake](https://bitbucket.org/johanneskoester/snakemake/downloads)
+* [snakemake](https://bitbucket.org/johanneskoester/snakemake/wiki/Documentation#markdown-header-installation)
 * [HISAT](https://github.com/infphilo/hisat/) - follow the HISAT directions to compile it with SRA support 
 * [HTSeq](http://www-huber.embl.de/users/anders/HTSeq/doc/overview.html)
 * [Picard](https://broadinstitute.github.io/picard/)
