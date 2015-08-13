@@ -12,7 +12,7 @@ HISATREF = "/resources/GRCh38/indexes/hisat-index/GRCh38.p3.genome"
 #GFFFILE = "/home/ubuntu/refs/GCF_000001405.30_GRCh38.ens77_genomic.gff"
 
 #set the number of threads to use in alignments 
-THREADS=12
+THREADS=6
 
 #set the filename of the file with the list of accessions 
 filename = "/home/ubuntu/accessions"
@@ -76,16 +76,16 @@ rule sam_to_bam:
 	shell: "time {SAMTOOLS} view -bS {input} > {output} 2> {wildcards.sample}.sam_to_bam.log"
 
 rule hisat_alignment_two:
-	output: temp("{sample}.GRCh38.ens77.hisat.sam"), "{sample}.hisat.two.log"
+	output: temp("{sample}.GRCh38.ens77.hisat.sam")
 	input: "{sample}.hisat.novel.splicesites.txt"
-	threads: 12
+	threads: THREADS
 	log: "log/{wildcards.sample}.hisat.two.log"
 	message: "running second pass hisat alignment with {threads} threads"
-	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesites.txt 2> {wildcards.sample}.hisat.two.log"
+	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesites.txt "
 
 rule hisat_alignment_one: 
-	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", temp("{sample}.GRCh38.ens77.hisat.one.sam")
-	threads: 12
+	output: "{sample}.hisat.novel.splicesites.txt", temp("{sample}.GRCh38.ens77.hisat.one.sam")
+	threads: THREADS
 	log: "log/{wildcards.sample}.hisat.one.log"
 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.ens77 with {threads} threads to produce splicesites"
 	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.ens77.hisat.one.sam "
