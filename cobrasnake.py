@@ -39,18 +39,21 @@ rule clean:
 rule perform_counting: 
 	output: "{sample}.GRCh38.ens77.HTSeq.counts"
 	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+	log: "log/{wildcards.sample}.counting.log"
 	message: "performing counting of reads on genes in {input}"
 	shell: "time {HTSEQ} -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam {GFFFILE} > {wildcards.sample}.GRCh38.ens77.HTSeq.counts 2> {wildcards.sample}.HTseq-count.log"
 
 rule qc_check: 
 	output: touch("{sample}.qc_check.done")
 	input: "{sample}.GRCh38.ens77.hisat.crsm"
+	log: "log/{wildcards.sample}.perlqc.log"
 	message: "checking quality stats of {input} with perl script"
 	shell: "time perl qc.pl --maplogfile {wildcards.sample}.hisat.two.log --metricsfile {wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> {wildcards.sample}.perl_qc.log"
 
 rule picard_rnaseq_qual: 
 	output: "{sample}.GRCh38.ens77.hisat.crsm"
 	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+	log: "log/{wildcards.sample}.picard_rnametrics.log"
 	message: "running picard rna qc stats on {input}"
 	shell: "time {PICARD} CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT={output} 2> {wildcards.sample}.picard_qual.log"
 
@@ -76,14 +79,16 @@ rule hisat_alignment_two:
 	output: temp("{sample}.GRCh38.ens77.hisat.sam"), "{sample}.hisat.two.log"
 	input: "{sample}.hisat.novel.splicesites.txt"
 	threads: 12
+	log: "log/{wildcards.sample}.hisat.two.log"
 	message: "running second pass hisat alignment with {threads} threads"
 	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam --novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesites.txt 2> {wildcards.sample}.hisat.two.log"
 
 rule hisat_alignment_one: 
 	output: "{sample}.hisat.novel.splicesites.txt", "{sample}.hisat.one.log", temp("{sample}.GRCh38.ens77.hisat.one.sam")
 	threads: 12
+	log: "log/{wildcards.sample}.hisat.one.log"
 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.ens77 with {threads} threads to produce splicesites"
-	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.ens77.hisat.one.sam  2> {wildcards.sample}.hisat.one.log"
+	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S {wildcards.sample}.GRCh38.ens77.hisat.one.sam "
 
 
 
