@@ -49,7 +49,7 @@ rule perform_counting:
 	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
 	log: "log/{wildcards.sample}.featureCounts.log"
 	threads: THREADS
-	message: "performing counting of reads on genes in {input}"
+	message: "performing featureCounting with {threads} threads on genes in {input}"
 	shell: "time {FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o {wildcards.sample}.GRCh38.ens77.featureCounts.counts {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> {wildcards.sample}.featureCounts.log"
 
 #IF COUNTING THEN JUST REPORT ONE MAX HIT PER READ ?  --primary fixes that? 
@@ -93,7 +93,7 @@ rule hisat_alignment_two:
 	threads: THREADS
 	log: "log/{sample}.hisat.two.log"
 	message: "running second pass hisat alignment with {threads} threads"
-	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam  2>& {log}"
+	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam  2>&1 > {log}"
 
 #--novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesites.txt
 
@@ -102,7 +102,7 @@ rule hisat_alignment_one:
 	threads: THREADS
 	log: "log/{sample}.hisat.one.log"
 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.ens77 with {threads} threads to produce splicesites"
-	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S /dev/null 2>&{log} "
+	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S /dev/null 2>&1 > {log} "
 
 
 
