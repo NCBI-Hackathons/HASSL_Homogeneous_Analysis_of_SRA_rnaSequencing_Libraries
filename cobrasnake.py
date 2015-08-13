@@ -89,7 +89,7 @@ rule sam_to_bam:
 
 rule hisat_alignment_two:
 	output: temp("{sample}.GRCh38.ens77.hisat.sam")
-	input: "{sample}.hisat.novel.splicesites.txt"
+	input: # "{sample}.hisat.novel.splicesites.txt"
 	threads: THREADS
 	log: "log/{sample}.hisat.two.log"
 	message: "running second pass hisat alignment with {threads} threads"
@@ -97,12 +97,12 @@ rule hisat_alignment_two:
 
 #--novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesites.txt
 
-rule hisat_alignment_one: 
-	output: "{sample}.hisat.novel.splicesites.txt"   #, temp("{sample}.GRCh38.ens77.hisat.one.sam")
-	threads: THREADS
-	log: "log/{sample}.hisat.one.log"
-	message: "hisat aligning reads from {wildcards.sample} to GRCh38.ens77 with {threads} threads to produce splicesites"
-	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S /dev/null 2>&1 > {log} "
+# rule hisat_alignment_one: 
+# 	output: "{sample}.hisat.novel.splicesites.txt"   #, temp("{sample}.GRCh38.ens77.hisat.one.sam")
+# 	threads: THREADS
+# 	log: "log/{sample}.hisat.one.log"
+# 	message: "hisat aligning reads from {wildcards.sample} to GRCh38.ens77 with {threads} threads to produce splicesites"
+# 	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --novel-splicesite-outfile {wildcards.sample}.hisat.novel.splicesites.txt -S /dev/null 2>&1 > {log} "
 
 
 
