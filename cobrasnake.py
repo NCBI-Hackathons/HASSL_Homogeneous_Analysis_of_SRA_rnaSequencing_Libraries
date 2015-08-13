@@ -7,10 +7,10 @@
 
 
 # FASTAREF='/home/ubuntu/russ/ncbi/GCF_000001405.30_GRCh38.ens77_genomic.fna'
-HISATREF = "/resources/GRCh38/indexes/hisat-index/GRCh38.p3.genome"
+HISATREF = "/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 #HISATREF = "/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 #GFFFILE = "/home/ubuntu/refs/GCF_000001405.30_GRCh38.ens77_genomic.gff"
-
+GTFFILE = "/resources/ensembl/Ensembl.GRCh38.77.gtf"
 #set the number of threads to use in alignments 
 THREADS=6
 
@@ -42,6 +42,18 @@ rule perform_counting:
 	log: "log/{wildcards.sample}.counting.log"
 	message: "performing counting of reads on genes in {input}"
 	shell: "time {HTSEQ} -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam {GFFFILE} > {wildcards.sample}.GRCh38.ens77.HTSeq.counts 2> {wildcards.sample}.HTseq-count.log"
+
+
+rule perform_counting: 
+	output: "{sample}.GRCh38.ens77.featureCounts.counts"
+	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+	log: "log/{wildcards.sample}.featureCounts.log"
+	threads: THREADS
+	message: "performing counting of reads on genes in {input}"
+	shell: "time {FEATURECOUNTS}  -T {threads} --primary --ignore-dup -F GTF -t exon -g gene_id -a {GTFFILE} -o {wildcards.sample}.GRCh38.ens77.featureCounts.counts {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> {wildcards.sample}.featureCounts.log"
+
+#IF COUNTING THEN JUST REPORT ONE MAX HIT PER READ ?  --primary fixes that? 
+# PAIRED END?...  -p  and  -P  
 
 rule qc_check: 
 	output: touch("{sample}.qc_check.done")
