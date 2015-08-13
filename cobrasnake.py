@@ -29,7 +29,7 @@ SAMTOOLS=" samtools "
 SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 rule all: 
-	input: expand("{sample}.GRCh38.ens77.sorted.bam.bai", sample=SAMPLES)
+	input: expand("{sample}.GRCh38.ens77.hisat.sorted.bam.bai", sample=SAMPLES)
 #	input: expand("{sample}.GRCh38.ens77.HTSeq.counts", sample=SAMPLES)
 
 
