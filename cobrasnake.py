@@ -15,14 +15,11 @@ GTFFILE = "/resources/ensembl/Ensembl.GRCh38.77.gtf"
 THREADS=4
 
 #set the filename of the file with the list of accessions 	
-try:
-	config['ACCESSION_FILE']
-except :
-	filename = "/resources/SRA-RNASEQ/RNA-Seq-Paired-RunAccessions"
-else:
-	filename = config["ACCESSION_FILE"]
+
+filename = config["ACCESSION_FILE"]
 
 
+print 'working with ' filename 
 
 # EXECUTABLE LOCATIONS (some on path)
 HISAT=" /home/ubuntu/install/hisat/hisat "
