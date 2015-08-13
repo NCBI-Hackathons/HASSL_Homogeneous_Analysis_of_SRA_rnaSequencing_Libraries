@@ -7,8 +7,9 @@
 
 
 # FASTAREF='/home/ubuntu/russ/ncbi/GCF_000001405.30_GRCh38.p4_genomic.fna'
-HISATREF = "/home/ubuntu/refs/hisat_index/GRCh38.p4"
-GFFFILE = "/home/ubuntu/refs/GCF_000001405.30_GRCh38.p4_genomic.gff"
+HISATREF = "/resources/GRCh38/indexes/hisat-index/GRCh38.p3.genome"
+#HISATREF = "/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
+#GFFFILE = "/home/ubuntu/refs/GCF_000001405.30_GRCh38.p4_genomic.gff"
 
 #set the number of threads to use in alignments 
 THREADS=12
@@ -19,14 +20,17 @@ filename = "/home/ubuntu/accessions"
 
 # EXECUTABLE LOCATIONS (some on path)
 HISAT=" hisat "
-PICARD=" java -jar ~/picard-tools-1.137/picard.jar "
-HTSEQ=" ~/HTSeq-0.6.1/build/scripts-2.7/htseq-count "
+PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
+FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
+#HTSEQ=" ~/HTSeq-0.6.1/build/scripts-2.7/htseq-count "
+
 SAMTOOLS=" samtools "
 
 SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 rule all: 
-	input: expand("{sample}.GRCh38.p4.HTSeq.counts", sample=SAMPLES)
+	input: expand("{sample}.GRCh38.ens77.sorted.bam.bai", sample=SAMPLES)
+#	input: expand("{sample}.GRCh38.p4.HTSeq.counts", sample=SAMPLES)
 
 
 rule clean: 
