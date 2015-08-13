@@ -36,12 +36,12 @@ rule all:
 rule clean: 
 	shell: "rm -fr SRR*"
 
-rule perform_counting: 
-	output: "{sample}.GRCh38.ens77.HTSeq.counts"
-	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
-	log: "log/{wildcards.sample}.counting.log"
-	message: "performing counting of reads on genes in {input}"
-	shell: "time {HTSEQ} -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam {GFFFILE} > {wildcards.sample}.GRCh38.ens77.HTSeq.counts 2> {wildcards.sample}.HTseq-count.log"
+# rule perform_counting: 
+# 	output: "{sample}.GRCh38.ens77.HTSeq.counts"
+# 	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+# 	log: "log/{wildcards.sample}.counting.log"
+# 	message: "performing counting of reads on genes in {input}"
+# 	shell: "time {HTSEQ} -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam {GFFFILE} > {wildcards.sample}.GRCh38.ens77.HTSeq.counts 2> {wildcards.sample}.HTseq-count.log"
 
 
 rule perform_counting: 
