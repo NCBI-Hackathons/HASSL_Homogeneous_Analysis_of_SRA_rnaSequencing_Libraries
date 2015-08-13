@@ -14,8 +14,14 @@ GTFFILE = "/resources/ensembl/Ensembl.GRCh38.77.gtf"
 #set the number of threads to use in alignments 
 THREADS=4
 
-#set the filename of the file with the list of accessions 
-filename = "/home/ubuntu/accessions"
+#set the filename of the file with the list of accessions 	
+try:
+	sys.argv[0]
+except IndexError:
+	filename = "/resources/SRA-RNASEQ/RNA-Seq-Paired-RunAccessions"
+else:
+	filename = sys.argv[0]
+
 
 
 # EXECUTABLE LOCATIONS (some on path)
@@ -92,7 +98,7 @@ rule hisat_alignment_two:
 	input: # "{sample}.hisat.novel.splicesites.txt"
 	threads: THREADS
 	log: "log/{sample}.hisat.two.log"
-	message: "running second pass hisat alignment with {threads} threads"
+	message: "running second pass hisat alignment on {sample} with {threads} threads"
 	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
 
 #--novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesites.txt
