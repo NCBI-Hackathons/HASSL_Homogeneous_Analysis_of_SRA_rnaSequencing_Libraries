@@ -19,7 +19,7 @@ filename = "/home/ubuntu/accessions"
 
 
 # EXECUTABLE LOCATIONS (some on path)
-HISAT=" hisat "
+HISAT=" /home/ubuntu/install/hisat/hisat "
 PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
 #HTSEQ=" ~/HTSeq-0.6.1/build/scripts-2.7/htseq-count "
