@@ -3,7 +3,7 @@ library(DESeq2)
 library("ggplot2")
 
 #Read in data
-countData <- read.table("/Users/dillmana/Documents/courses/merge_genecount.txt", header=TRUE, stringsAsFactors=TRUE, row.names="Name")
+countData <- read.table("collate.counts.tsv", header=TRUE, stringsAsFactors=TRUE, row.names="Name")
 
 #filter out low coverage reads
 rs <- rowSums ( countData )
