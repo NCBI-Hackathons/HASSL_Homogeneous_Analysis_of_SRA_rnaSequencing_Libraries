@@ -50,7 +50,7 @@ rule perform_counting:
 	log: "log/{wildcards.sample}.featureCounts.log"
 	threads: THREADS
 	message: "performing counting of reads on genes in {input}"
-	shell: "time {FEATURECOUNTS}  -T {threads} --primary --ignore-dup -F GTF -t exon -g gene_id -a {GTFFILE} -o {wildcards.sample}.GRCh38.ens77.featureCounts.counts {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> {wildcards.sample}.featureCounts.log"
+	shell: "time {FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o {wildcards.sample}.GRCh38.ens77.featureCounts.counts {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> {wildcards.sample}.featureCounts.log"
 
 #IF COUNTING THEN JUST REPORT ONE MAX HIT PER READ ?  --primary fixes that? 
 # PAIRED END?...  -p  and  -P  
