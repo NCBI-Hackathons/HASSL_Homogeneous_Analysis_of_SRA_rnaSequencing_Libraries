@@ -1,3 +1,7 @@
+# This script requires two files
+# 1. collate.counts.tsv (from collate.pl)
+# 2. accessions.txt - contains SRA accessions (generally same file used by cobrasnake.py)
+
 #Load packages
 library(DESeq2)
 library("ggplot2")
@@ -12,7 +16,9 @@ table(use)
 cdsFilt <- countData[ use, ]
 
 #name of files
-colData <- read.csv("Design.csv", header=TRUE, stringsAsFactors=TRUE, row.names="sample_ID")
+colData <- read.delim("accessions.txt", header=F, stringsAsFactors=TRUE)
+colnames(colData) = c("Sample")
+rownames(colData) = colData$Sample
 
 #combine tables and normalize for library depth
 ddsfil <- DESeqDataSetFromMatrix(countData = cdsFilt, colData = colData, design = ~ Sample)
