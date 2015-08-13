@@ -16,11 +16,11 @@ THREADS=4
 
 #set the filename of the file with the list of accessions 	
 try:
-	sys.argv[0]
-except IndexError:
+	config['ACCESSION_FILE']
+except :
 	filename = "/resources/SRA-RNASEQ/RNA-Seq-Paired-RunAccessions"
 else:
-	filename = sys.argv[0]
+	filename = config["ACCESSION_FILE"]
 
 
 
