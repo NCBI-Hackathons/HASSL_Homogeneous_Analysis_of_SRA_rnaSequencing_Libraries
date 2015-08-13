@@ -19,7 +19,6 @@ THREADS=4
 filename = config["ACCESSION_FILE"]
 
 
-print 'working with ' filename 
 
 # EXECUTABLE LOCATIONS (some on path)
 HISAT=" /home/ubuntu/install/hisat/hisat "
