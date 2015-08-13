@@ -93,7 +93,7 @@ rule hisat_alignment_two:
 	output: temp("{sample}.GRCh38.ens77.hisat.sam")
 	input: # "{sample}.hisat.novel.splicesites.txt"
 	threads: THREADS
-	log: "log/{wildcards.sample}.hisat.two.log"
+	log: "log/{sample}.hisat.two.log"
 	message: "running second pass hisat alignment on {wildcards.sample} with {threads} threads"
 	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
 
