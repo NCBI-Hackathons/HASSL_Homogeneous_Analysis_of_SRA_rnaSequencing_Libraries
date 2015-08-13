@@ -12,7 +12,7 @@ HISATREF = "/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 #GFFFILE = "/home/ubuntu/refs/GCF_000001405.30_GRCh38.ens77_genomic.gff"
 GTFFILE = "/resources/ensembl/Ensembl.GRCh38.77.gtf"
 #set the number of threads to use in alignments 
-THREADS=6
+THREADS=4
 
 #set the filename of the file with the list of accessions 
 filename = "/home/ubuntu/accessions"
@@ -93,7 +93,7 @@ rule hisat_alignment_two:
 	threads: THREADS
 	log: "log/{sample}.hisat.two.log"
 	message: "running second pass hisat alignment with {threads} threads"
-	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam  2>&1 > {log}"
+	shell: "time {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S {wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
 
 #--novel-splicesite-infile {wildcards.sample}.hisat.novel.splicesites.txt
 
