@@ -3,14 +3,17 @@ use strict;
 use warnings;
 
 my $acc = shift;    # list of accessions in file
+my @acc;            # array to save the order of Accessions
 my $sra;            # hashref to hold info about each SRA
 my $crsmheader;     # i.e. PF_BASES \t ... \t ... (taken from Picard output)
 my $gotgenes = 0;
 my @countsgenes;
+my $genecounts;         # hashref to hold raw counts for each gene
 open (my $ACC, "<", $acc);
 while (<$ACC>) {
   chomp;
   my $acc = $_;
+  push (@acc, $acc);
   
   # parse Picard CRSM output
   my $crsm = "$acc.GRCh38.p4.hisat.crsm";
@@ -55,7 +58,7 @@ while (<$ACC>) {
       if ($gotgenes == 0) {    # only need to get Gene names on the first SRA
         push (@countsgenes, $gene);
       }
-      push (@{$sra->{$acc}{counts}}, $cnt);
+      push @{$genecounts->{$gene}}, $cnt;  # this array of counts will be in the same order as @acc
     }
     if (@countsgenes) { $gotgenes++; }
   }
@@ -76,8 +79,8 @@ foreach (sort keys %$sra) {
 close ($QC);
 
 open (my $COUNTS, ">", "collate.counts.tsv");
-print $COUNTS join("\t", "Name", join ("\t", @countsgenes)), "\n";
-foreach (sort keys %$sra) {
-  print $COUNTS join("\t", $_, join("\t", @{$sra->{$_}{counts}})), "\n"; 
+print $COUNTS join("\t", "Name", join ("\t", @acc)), "\n";
+foreach my $g (@countsgenes) {
+  print $COUNTS join("\t", $g, join("\t", @{$genecounts->{$g}} )  ), "\n";   # the array of counts will be in same order as @acc
 }
 close ($COUNTS);
