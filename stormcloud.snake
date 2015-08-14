@@ -13,7 +13,7 @@ HISATREF="/home/ubuntu/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.t
 GTFFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.gtf"
 SPLICEFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.splicesites.txt"
 #set the number of threads to use in alignments 
-THREADS=4
+THREADS=5
 
 #set the filename of the file with the list of accessions 	
 
