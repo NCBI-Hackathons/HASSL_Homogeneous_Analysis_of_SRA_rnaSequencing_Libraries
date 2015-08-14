@@ -49,7 +49,7 @@ rule clean:
 
 rule perform_counting: 
 	output: "{sample}.GRCh38.ens77.featureCounts.counts"
-	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+	input: "{sample}.GRCh38.ens77.hisat.sorted.bam"
 	log: "log/{wildcards.sample}.featureCounts.log"
 	threads: THREADS
 	message: "performing featureCounting with {threads} threads on genes in {input}"
