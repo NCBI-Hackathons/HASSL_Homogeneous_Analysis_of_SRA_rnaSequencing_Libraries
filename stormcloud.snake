@@ -63,32 +63,32 @@ rule qc_check:
 	input: "{sample}.GRCh38.ens77.hisat.crsm"
 	log: "log/{wildcards.sample}.perlqc.log"
 	message: "checking quality stats of {input} with perl script"
-	shell: " perl qc.pl --maplogfile {wildcards.sample}.hisat.two.log --metricsfile {wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> {wildcards.sample}.perl_qc.log"
+	shell: " perl qc.pl --maplogfile {wildcards.sample}.hisat.two.log --metricsfile {wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
 
 rule picard_rnaseq_qual: 
 	output: "{sample}.GRCh38.ens77.hisat.crsm"
 	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
 	log: "log/{wildcards.sample}.picard_rnametrics.log"
 	message: "running picard rna qc stats on {input}"
-	shell: " {PICARD} CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT={output} 2> {wildcards.sample}.picard_qual.log"
+	shell: " {PICARD} CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT={output} 2> log/{wildcards.sample}.picard_rnametrics.log"
 
 rule index_bam: 
 	output: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
 	input: "{sample}.GRCh38.ens77.hisat.sorted.bam"
 	message: "indexing bam alignment file {input}"
-	shell: " {SAMTOOLS} index {input} {output} 2> {wildcards.sample}.index_bam.log"
+	shell: " {SAMTOOLS} index {input} {output} "
 
 rule sort_bam:
 	output: "{sample}.GRCh38.ens77.hisat.sorted.bam"
 	input: "{sample}.GRCh38.ens77.hisat.bam"
 	message: "sorting {input} to {output}"
-	shell: " {SAMTOOLS} sort {input} {wildcards.sample}.GRCh38.ens77.hisat.sorted 2> {wildcards.sample}.sort_bam.log"
+	shell: " {SAMTOOLS} sort {input} {wildcards.sample}.GRCh38.ens77.hisat.sorted "
 
 rule sam_to_bam:
 	output: temp("{sample}.GRCh38.ens77.hisat.bam")
 	input: "{sample}.GRCh38.ens77.hisat.sam"
 	message: "converting sam to bam: {input} to {output}"
-	shell: " {SAMTOOLS} view -bS {input} > {output} 2> {wildcards.sample}.sam_to_bam.log"
+	shell: " {SAMTOOLS} view -bS {input} > {output} "
 
 rule hisat_alignment:
 	output: temp("{sample}.GRCh38.ens77.hisat.sam")
