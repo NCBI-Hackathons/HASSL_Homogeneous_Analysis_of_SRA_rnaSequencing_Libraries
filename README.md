@@ -1,5 +1,7 @@
 # HASSL - Homogeneous Analysis of SRA RNAseq Libraries
 
+[![Join the chat at https://gitter.im/DCGenomics/HASSL_Homogeneous_Analysis_of_SRA_rnaSequencing_Libraries](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DCGenomics/HASSL_Homogeneous_Analysis_of_SRA_rnaSequencing_Libraries?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 HASSL is a snakemake pipeline designed to take SRA run accession numbers and
 output both sorted bam alignments and raw read counts for an infinite number
 of samples.
