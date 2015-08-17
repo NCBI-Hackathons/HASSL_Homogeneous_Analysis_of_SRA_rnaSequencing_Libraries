@@ -29,7 +29,8 @@ FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCou
 
 SAMTOOLS=" samtools "
 
-SAMPLES = [line.rstrip('\n') for line in open(filename)]
+SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
+SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
 
 rule all: 
 	input: expand("{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)
