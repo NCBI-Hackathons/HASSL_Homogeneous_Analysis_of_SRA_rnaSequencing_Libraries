@@ -33,7 +33,8 @@ SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
 SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
 
 rule all: 
-	input: expand("{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)
+	input: expand("{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES), expand("{sample}.qc_check.done", sample=SAMPLES)
+
 #	input: expand("{sample}.GRCh38.ens77.HTSeq.counts", sample=SAMPLES)
 
 
