@@ -26,7 +26,7 @@ SAMTOOLS=" samtools "
 SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 rule all: 
-	input: expand("{sample}.GRCh38.p4.HTSeq.counts", sample=SAMPLES)
+	input: expand("{sample}.GRCh38.p4.HTSeq.counts", sample=SAMPLES), expand("{sample}.GRCh38.p4.HTSeq.counts, sample=SAMPLES) 
 
 
 rule clean: 
