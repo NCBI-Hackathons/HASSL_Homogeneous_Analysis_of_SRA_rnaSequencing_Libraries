@@ -51,7 +51,6 @@ The variables that you need to examine are:
 
 * HISATREF
 * GTFFILE
-* 
 * THREADS
 * HISAT
 * PICARD
