@@ -42,8 +42,8 @@ SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
 rule all: 
   input: expand("{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
 
-rule all_on_s3: 
-  input: expand("{S3_BUCKET}/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES, S3_BUCKET=S3_BUCKET)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
+# rule all_on_s3: 
+#   input: expand("{S3_BUCKET}/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES, S3_BUCKET=S3_BUCKET)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
 
 # input: expand("{sample}.GRCh38.ens77.HTSeq.counts", sample=SAMPLES)
 
@@ -53,12 +53,12 @@ rule clean:
 
 
 
-rule transfer_to_s3: 
-  output: "{S3_BUCKET}/{file}"
-  input: "{file}"
-  log: "log/{file}.xfer.to.s3.log"
-  message: "transferring {file} to S3 Bucket {S3_BUCKET}  ->  {S3_BUCKET}/{file}"
-  shell: "s3cmd put {wildcards.file} {S3_BUCKET}/{file}"
+# rule transfer_to_s3: 
+#   output: "{S3_BUCKET}/{file}"
+#   input: "{file}"
+#   log: "log/{file}.xfer.to.s3.log"
+#   message: "transferring {file} to S3 Bucket {S3_BUCKET}  ->  {S3_BUCKET}/{file}"
+#   shell: "s3cmd put {wildcards.file} {S3_BUCKET}/{file}"
 
 # rule perform_counting: 
 #   output: "{sample}.GRCh38.ens77.HTSeq.counts"
