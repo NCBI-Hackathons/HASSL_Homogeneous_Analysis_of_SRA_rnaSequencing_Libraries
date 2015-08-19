@@ -9,6 +9,7 @@
 #OUTPUT LOCATIONS
 #working directory for now 
 S3_BUCKET='s3://genomicdata/hassl/'
+WORKING_DIR="/mnt/SRP050499/"
 
 
 # HISATREF="/home/ubuntu/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
@@ -119,7 +120,7 @@ rule sam_to_bam:
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
 rule hisat_alignment:
-  output: temp("{sample}.GRCh38.ens77.hisat.sam")
+  output: temp("{WORKING_DIR}/{sample}.GRCh38.ens77.hisat.sam")
   input: SPLICEFILE 
   threads: THREADS
   log: "log/{sample}.hisat.alignment.log"
