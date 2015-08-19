@@ -120,7 +120,7 @@ rule sam_to_bam:
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
 rule hisat_alignment:
-  output: temp("{WORKING_DIR}/bams/{sample}.GRCh38.ens77.hisat.sam")
+  output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
   input: SPLICEFILE 
   threads: THREADS
   log: "log/{sample}.hisat.alignment.log"
