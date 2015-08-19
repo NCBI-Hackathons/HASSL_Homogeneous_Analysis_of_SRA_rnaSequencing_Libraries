@@ -42,7 +42,7 @@ rule all:
   input: expand("{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
 
 rule all_on_s3: 
-  input: expand("{S3_BUCKET}/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
+  input: expand("{S3_BUCKET}/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES, S3_BUCKET=S3_BUCKET)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
 
 # input: expand("{sample}.GRCh38.ens77.HTSeq.counts", sample=SAMPLES)
 
