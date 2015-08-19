@@ -49,7 +49,7 @@ rule all:
 
 
 rule clean: 
-  shell: "rm -fr SRR*; rm log/SRR* "
+  shell: "rm -fr log qc bams counts  "
 
 
 
@@ -81,7 +81,7 @@ rule perform_counting:
   log: "log/{wildcards.sample}.featureCounts.log"
   threads: THREADS
   message: "performing featureCounting with {threads} threads on genes in {input}"
-  shell: " mkdir counts; {FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> log/{wildcards.sample}.featureCounts.log"
+  shell: "{FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> log/{wildcards.sample}.featureCounts.log"
 
 #IF COUNTING THEN JUST REPORT ONE MAX HIT PER READ ?  --primary fixes that? 
 # PAIRED END?...  -p  and  -P  
@@ -98,7 +98,7 @@ rule picard_rnaseq_qual:
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
   log: "log/{wildcards.sample}.picard_rnametrics.log"
   message: "running picard rna qc stats on {input}"
-  shell: " mkdir qc ; {PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT=qc/{output} 2> log/{wildcards.sample}.picard_rnametrics.log"
+  shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT=qc/{output} 2> log/{wildcards.sample}.picard_rnametrics.log"
 
 rule index_bam: 
   output: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
@@ -125,7 +125,7 @@ rule hisat_alignment:
   threads: THREADS
   log: "log/{sample}.hisat.alignment.log"
   message: "running second pass hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "mkdir bams; {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
+  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
 
 
 
