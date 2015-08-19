@@ -67,65 +67,65 @@ rule transfer_to_s3:
 #   message: "performing counting of reads on genes in {input}"
 #   shell: "time {HTSEQ} -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam {GFFFILE} > {wildcards.sample}.GRCh38.ens77.HTSeq.counts 2> {wildcards.sample}.HTseq-count.log"
 
-rule project_counting:
+rule project_counts:
   output: "project.featureCounts"
-  input: GTFFILE 
+  input: GTFFILE, expand("bams/{sample}.GRCh38.ens77.hisat.sorted.bam", sample=SAMPLES)
   log: "log/project.featureCounting"
   threads: THREADS 
   message: "performing overall project feature counting"
-  shell: "{FEATURECOUNTS} -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o project.featureCounts *.bam 2>&1 > log/project.featureCounting"
+  shell: "{FEATURECOUNTS} -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o project.featureCounts bams/*.bam 2>&1 > log/project.featureCounting.log"
 
 rule perform_counting: 
-  output: "{sample}.GRCh38.ens77.featureCounts.counts"
-  input: "{sample}.GRCh38.ens77.hisat.sorted.bam"
+  output: "counts/{sample}.GRCh38.ens77.featureCounts.counts"
+  input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
   log: "log/{wildcards.sample}.featureCounts.log"
   threads: THREADS
   message: "performing featureCounting with {threads} threads on genes in {input}"
-  shell: " {FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o {wildcards.sample}.GRCh38.ens77.featureCounts.counts {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> {wildcards.sample}.featureCounts.log"
+  shell: " mkdir counts; {FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> log/{wildcards.sample}.featureCounts.log"
 
 #IF COUNTING THEN JUST REPORT ONE MAX HIT PER READ ?  --primary fixes that? 
 # PAIRED END?...  -p  and  -P  
 
 rule qc_check: 
-  output: touch("{sample}.qc_check.done")
-  input: "{sample}.GRCh38.ens77.hisat.crsm"
+  output: touch("log/{sample}.qc_check.done")
+  input: "qc/{sample}.GRCh38.ens77.hisat.crsm"
   log: "log/{wildcards.sample}.perlqc.log"
   message: "checking quality stats of {input} with perl script"
-  shell: " perl qc.pl --maplogfile {wildcards.sample}.hisat.two.log --metricsfile {wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
+  shell: " perl qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
 
 rule picard_rnaseq_qual: 
-  output: "{sample}.GRCh38.ens77.hisat.crsm"
-  input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+  output: "qc/{sample}.GRCh38.ens77.hisat.crsm"
+  input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
   log: "log/{wildcards.sample}.picard_rnametrics.log"
   message: "running picard rna qc stats on {input}"
-  shell: " {PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT={output} 2> log/{wildcards.sample}.picard_rnametrics.log"
+  shell: " mkdir qc ; {PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT=qc/{output} 2> log/{wildcards.sample}.picard_rnametrics.log"
 
 rule index_bam: 
-  output: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
-  input: "{sample}.GRCh38.ens77.hisat.sorted.bam"
+  output: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+  input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
   message: "indexing bam alignment file {input}"
   shell: " {SAMTOOLS} index {input} {output} "
 
 rule sort_bam:
-  output: "{sample}.GRCh38.ens77.hisat.sorted.bam"
-  input: "{sample}.GRCh38.ens77.hisat.bam"
+  output: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
+  input: "bams/{sample}.GRCh38.ens77.hisat.bam"
   threads: THREADS
   message: "sorting {input} to {output}"
-  shell: " {SAMTOOLS} sort -@ {threads} {input} {wildcards.sample}.GRCh38.ens77.hisat.sorted "
+  shell: " {SAMTOOLS} sort -@ {threads} {input} bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted "
 
 rule sam_to_bam:
-  output: temp("{sample}.GRCh38.ens77.hisat.bam")
-  input: "{sample}.GRCh38.ens77.hisat.sam"
+  output: temp("bams/{sample}.GRCh38.ens77.hisat.bam")
+  input: "bams/{sample}.GRCh38.ens77.hisat.sam"
   message: "converting sam to bam: {input} to {output}"
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
 rule hisat_alignment:
-  output: temp("{WORKING_DIR}/{sample}.GRCh38.ens77.hisat.sam")
+  output: temp("{WORKING_DIR}/bams/{sample}.GRCh38.ens77.hisat.sam")
   input: SPLICEFILE 
   threads: THREADS
   log: "log/{sample}.hisat.alignment.log"
   message: "running second pass hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: " {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S {wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
+  shell: "mkdir bams; {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
 
 
 
