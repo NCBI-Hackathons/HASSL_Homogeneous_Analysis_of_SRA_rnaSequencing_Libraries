@@ -1,4 +1,5 @@
 .DS_Store
+bin/
 *bam
 *sam
 .snakemake/
@@ -7,3 +8,4 @@ lib/GCF_000001405.30_GRCh38.p4_genomic.gff
 lib/ncbirefflat.txt
 lib/refFlat.txt
 lib/GRC*
+.DS_Store
