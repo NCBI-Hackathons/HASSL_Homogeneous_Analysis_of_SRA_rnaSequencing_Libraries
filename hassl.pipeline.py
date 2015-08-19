@@ -15,6 +15,7 @@ SPLICEFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.splicesites.txt"
 
 
 # EXECUTABLE LOCATIONS (some on path)
+HASSL=" /home/ubuntu/install/HASSL"
 HISAT=" /home/ubuntu/install/hisat/hisat "
 PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
@@ -70,7 +71,7 @@ rule qc_check:
   input: "qc/{sample}.GRCh38.ens77.hisat.crsm"
   log: "log/{wildcards.sample}.perl_qc.log"
   message: "checking quality stats of {input} with perl script"
-  shell: " perl scripts/qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
+  shell: " perl {HASSL}/scripts/qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
 
 rule picard_rnaseq_qual: 
   output: "qc/{sample}.GRCh38.ens77.hisat.crsm"
