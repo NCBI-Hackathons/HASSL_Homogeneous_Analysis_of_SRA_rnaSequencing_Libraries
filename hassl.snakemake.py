@@ -51,7 +51,7 @@ rule clean:
 rule project_counts:
   output: "project.featureCounts"
   input: GTFFILE, expand("bams/{sample}.GRCh38.ens77.hisat.sorted.bam", sample=SAMPLES)
-  log: "log/project.featureCounting"
+  log: "log/project.featureCounting.log"
   threads: THREADS 
   message: "performing overall project feature counting"
   shell: "{FEATURECOUNTS} -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o project.featureCounts bams/*.bam 2>&1 > log/project.featureCounting.log"
