@@ -77,7 +77,7 @@ rule picard_rnaseq_qual:
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
   log: "log/{wildcards.sample}.picard_rnametrics.log"
   message: "running picard rna qc stats on {input}"
-  shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT=bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT=qc/{output} 2> log/{wildcards.sample}.picard_rnametrics.log"
+  shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={input} OUTPUT={output} 2> log/{wildcards.sample}.picard_rnametrics.log"
 
 rule index_bam: 
   output: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
