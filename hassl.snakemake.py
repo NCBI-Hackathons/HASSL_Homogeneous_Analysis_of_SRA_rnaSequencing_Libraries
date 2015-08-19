@@ -6,7 +6,7 @@
 
 
 
-OUTPUT LOCATIONS
+#OUTPUT LOCATIONS
 #working directory for now 
 S3_BUCKET='s3://genomicdata/hassl/'
 
