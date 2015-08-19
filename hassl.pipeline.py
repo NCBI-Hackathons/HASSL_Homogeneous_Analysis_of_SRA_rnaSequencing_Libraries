@@ -70,11 +70,11 @@ rule qc_check:
   input: "qc/{sample}.GRCh38.ens77.hisat.crsm"
   log: "log/{wildcards.sample}.perl_qc.log"
   message: "checking quality stats of {input} with perl script"
-  shell: " perl qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
+  shell: " perl scripts/qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
 
 rule picard_rnaseq_qual: 
   output: "qc/{sample}.GRCh38.ens77.hisat.crsm"
-  input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+  input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
   log: "log/{wildcards.sample}.picard_rnametrics.log"
   message: "running picard rna qc stats on {input}"
   shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT=qc/{output} 2> log/{wildcards.sample}.picard_rnametrics.log"

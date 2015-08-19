@@ -43,7 +43,7 @@ rule convert_refflat:
 	output: "lib/ncbirefflat.txt"
 	input: "lib/refFlat.txt"
 	message: "running refflat converter"
-	shell: "perl refflat2ncbi_refflat.pl {input} > {output}"
+	shell: "perl scripts/refflat2ncbi_refflat.pl {input} > {output}"
 
 rule gunzip_refflat:
 	output: temp("lib/refFlat.txt")
