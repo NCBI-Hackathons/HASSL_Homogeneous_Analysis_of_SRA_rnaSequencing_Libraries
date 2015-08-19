@@ -21,11 +21,12 @@ SAMTOOLS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
 
 
 #set the filename of the file with the list of accessions   
-try config["ACCESSION_FILE"]:
-  except KeyError: 
-    filename = "ACCESSIONS"
-  else:
-    filename = config["ACCESSION_FILE"]
+try:
+  config["ACCESSION_FILE"]
+except KeyError: 
+  filename = "ACCESSIONS"
+else:
+  filename = config["ACCESSION_FILE"]
   
 
 SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
