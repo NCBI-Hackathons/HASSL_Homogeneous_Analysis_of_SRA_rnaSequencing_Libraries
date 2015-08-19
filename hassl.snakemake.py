@@ -43,16 +43,11 @@ else:
 
 
 rule all: 
-  input: expand("counts/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
-
-# rule all_on_s3: 
-#   input: expand("{S3_BUCKET}/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES, S3_BUCKET=S3_BUCKET)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
+  input: expand("counts/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES) , expand("log/{sample}.qc_check.done", sample=SAMPLES)
 
 
 rule clean: 
   shell: "rm -fr log qc bams counts project.featureCounts* "
-
-
 
 rule project_counts:
   output: "project.featureCounts"
@@ -73,7 +68,7 @@ rule perform_counting:
 rule qc_check: 
   output: touch("log/{sample}.qc_check.done")
   input: "qc/{sample}.GRCh38.ens77.hisat.crsm"
-  log: "log/{wildcards.sample}.perlqc.log"
+  log: "log/{wildcards.sample}.perl_qc.log"
   message: "checking quality stats of {input} with perl script"
   shell: " perl qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
 
