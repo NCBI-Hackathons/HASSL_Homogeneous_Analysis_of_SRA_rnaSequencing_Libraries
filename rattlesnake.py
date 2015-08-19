@@ -10,6 +10,7 @@
 HISATREF="/home/ubuntu/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 # HISATREF="/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 #GFFFILE = "/home/ubuntu/refs/GCF_000001405.30_GRCh38.ens77_genomic.gff"
+PICARDFLATFILE="/home/ubuntu/resources/ensembl/GRCh38.77.compatible.ucsc.picard.refflat.txt"
 GTFFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.gtf"
 SPLICEFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.splicesites.txt"
 #set the number of threads to use in alignments 
@@ -27,7 +28,7 @@ PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
 #HTSEQ=" ~/HTSeq-0.6.1/build/scripts-2.7/htseq-count "
 
-SAMTOOLS=" samtools "
+SAMTOOLS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
 
 SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
 SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
@@ -79,7 +80,7 @@ rule picard_rnaseq_qual:
 	input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
 	log: "log/{wildcards.sample}.picard_rnametrics.log"
 	message: "running picard rna qc stats on {input}"
-	shell: " {PICARD} CollectRnaSeqMetrics REF_FLAT=~/refs/refflat/ncbirefflat.txt STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT={output} 2> log/{wildcards.sample}.picard_rnametrics.log"
+	shell: " {PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={wildcards.sample}.GRCh38.ens77.hisat.sorted.bam OUTPUT={output} 2> log/{wildcards.sample}.picard_rnametrics.log"
 
 rule index_bam: 
 	output: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
@@ -90,8 +91,9 @@ rule index_bam:
 rule sort_bam:
 	output: "{sample}.GRCh38.ens77.hisat.sorted.bam"
 	input: "{sample}.GRCh38.ens77.hisat.bam"
+	threads: THREADS
 	message: "sorting {input} to {output}"
-	shell: " {SAMTOOLS} sort {input} {wildcards.sample}.GRCh38.ens77.hisat.sorted "
+	shell: " {SAMTOOLS} sort -@ {threads} {input} {wildcards.sample}.GRCh38.ens77.hisat.sorted "
 
 rule sam_to_bam:
 	output: temp("{sample}.GRCh38.ens77.hisat.bam")
