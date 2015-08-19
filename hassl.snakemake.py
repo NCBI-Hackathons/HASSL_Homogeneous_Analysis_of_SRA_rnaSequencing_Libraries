@@ -1,43 +1,40 @@
 # THIS SCRIPT WAS PRODUCED VIA THE NCBI HACKATHON IN AUGUST 2015 
-# WRITTEN (INITIALLY) BY PAUL CANTALUPO, HIROKO OHMIYA, ALLISSA DILLMAN, AND RUSSELL DURRETT
+# WRITTEN BY PAUL CANTALUPO, HIROKO OHMIYA, ALLISSA DILLMAN, AND RUSSELL DURRETT
 
 
-# TO DO - UPDATE TO SUBREAD PACKAGE (for counting) INSTEAD OF HTSEQ (TOO SLOW, SUBREAD SUPER FAST)
-
-
-
-#OUTPUT LOCATIONS
-#working directory for now 
-S3_BUCKET='s3://genomicdata/hassl/'
-WORKING_DIR="/mnt/SRP050499/"
+import os 
 
 
 # HISATREF="/home/ubuntu/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 HISATREF="/mnt/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
-
-#GFFFILE = "/home/ubuntu/refs/GCF_000001405.30_GRCh38.ens77_genomic.gff"
 PICARDFLATFILE="/home/ubuntu/resources/ensembl/GRCh38.77.compatible.ucsc.picard.refflat.txt"
 GTFFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.gtf"
 SPLICEFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.splicesites.txt"
 #set the number of threads to use in alignments 
 THREADS=5
 
-#set the filename of the file with the list of accessions   
-
-filename = config["ACCESSION_FILE"]
-
-
-
 # EXECUTABLE LOCATIONS (some on path)
 HISAT=" /home/ubuntu/install/hisat/hisat "
 PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
-#HTSEQ=" ~/HTSeq-0.6.1/build/scripts-2.7/htseq-count "
-
 SAMTOOLS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
+
+
+#set the filename of the file with the list of accessions   
+if config["ACCESSION_FILE"]:
+  filename = config["ACCESSION_FILE"]
+else:
+  filename = "ACCESSIONS"
 
 SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
 SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
+
+if config["WORKING_DIR"]:
+  WORKING_DIR=config["WORKING_DIR"]
+else: 
+  WORKING_DIR=os.getcwd()
+
+
 
 rule all: 
   input: expand("{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
@@ -45,27 +42,11 @@ rule all:
 # rule all_on_s3: 
 #   input: expand("{S3_BUCKET}/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES, S3_BUCKET=S3_BUCKET)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
 
-# input: expand("{sample}.GRCh38.ens77.HTSeq.counts", sample=SAMPLES)
-
 
 rule clean: 
   shell: "rm -fr log qc bams counts  "
 
 
-
-# rule transfer_to_s3: 
-#   output: "{S3_BUCKET}/{file}"
-#   input: "{file}"
-#   log: "log/{file}.xfer.to.s3.log"
-#   message: "transferring {file} to S3 Bucket {S3_BUCKET}  ->  {S3_BUCKET}/{file}"
-#   shell: "s3cmd put {wildcards.file} {S3_BUCKET}/{file}"
-
-# rule perform_counting: 
-#   output: "{sample}.GRCh38.ens77.HTSeq.counts"
-#   input: "{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
-#   log: "log/{wildcards.sample}.counting.log"
-#   message: "performing counting of reads on genes in {input}"
-#   shell: "time {HTSEQ} -m intersection-nonempty -i gene -s no -f bam {wildcards.sample}.GRCh38.ens77.hisat.sorted.bam {GFFFILE} > {wildcards.sample}.GRCh38.ens77.HTSeq.counts 2> {wildcards.sample}.HTseq-count.log"
 
 rule project_counts:
   output: "project.featureCounts"
@@ -82,9 +63,6 @@ rule perform_counting:
   threads: THREADS
   message: "performing featureCounting with {threads} threads on genes in {input}"
   shell: "{FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> log/{wildcards.sample}.featureCounts.log"
-
-#IF COUNTING THEN JUST REPORT ONE MAX HIT PER READ ?  --primary fixes that? 
-# PAIRED END?...  -p  and  -P  
 
 rule qc_check: 
   output: touch("log/{sample}.qc_check.done")
