@@ -4,14 +4,15 @@
 
 import os 
 
+#set the number of threads to use in alignments and sorting
+THREADS=3
 
 # HISATREF="/home/ubuntu/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 HISATREF="/mnt/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
 PICARDFLATFILE="/home/ubuntu/resources/ensembl/GRCh38.77.compatible.ucsc.picard.refflat.txt"
 GTFFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.gtf"
 SPLICEFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.splicesites.txt"
-#set the number of threads to use in alignments 
-THREADS=5
+
 
 # EXECUTABLE LOCATIONS (some on path)
 HISAT=" /home/ubuntu/install/hisat/hisat "
@@ -42,14 +43,14 @@ else:
 
 
 rule all: 
-  input: expand("{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
+  input: expand("counts/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
 
 # rule all_on_s3: 
 #   input: expand("{S3_BUCKET}/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES, S3_BUCKET=S3_BUCKET)  #, expand("{sample}.qc_check.done", sample=SAMPLES)
 
 
 rule clean: 
-  shell: "rm -fr log qc bams counts  "
+  shell: "rm -fr log qc bams counts project.featureCounts* "
 
 
 
