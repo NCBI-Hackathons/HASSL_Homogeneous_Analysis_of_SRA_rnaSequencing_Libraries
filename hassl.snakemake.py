@@ -32,10 +32,12 @@ else:
 SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
 SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
 
-if config["WORKING_DIR"]:
-  WORKING_DIR=config["WORKING_DIR"]
-else: 
+try: 
+  config["WORKING_DIR"]:
+except KeyError: 
   WORKING_DIR=os.getcwd()
+else: 
+  WORKING_DIR=config["WORKING_DIR"]
 
 
 
