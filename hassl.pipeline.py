@@ -19,8 +19,8 @@ HASSL=" /home/ubuntu/HASSL"
 HISAT=" /home/ubuntu/install/hisat/hisat "
 PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
-SAMTOOLS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
-
+SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
+SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
 
 #set the filename of the file with the list of accessions   
 try:
@@ -91,7 +91,7 @@ rule sort_bam:
   input: "bams/{sample}.GRCh38.ens77.hisat.bam"
   threads: THREADS
   message: "sorting {input} to {output}"
-  shell: " {SAMTOOLS} sort -@ {threads} {input} bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted "
+  shell: " {SAMTOOLS_ROCKS} sort -@ {threads} {input} bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted "
 
 rule sam_to_bam:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.bam")
