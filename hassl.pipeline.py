@@ -7,20 +7,17 @@ import os
 #set the number of threads to use in alignments and sorting
 THREADS=3
 
-# HISATREF="/home/ubuntu/resources/ensembl/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
-HISATREF="/mnt/hisat_indexes/Homo_sapiens.GRCh38.dna.toplevel"
-PICARDFLATFILE="/home/ubuntu/resources/ensembl/GRCh38.77.compatible.ucsc.picard.refflat.txt"
-GTFFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.gtf"
-SPLICEFILE="/home/ubuntu/resources/ensembl/Ensembl.GRCh38.77.splicesites.txt"
-
+HISATREF="GCF_000001405.30_GRCh38.p4_chr20.hisat"
+PICARDFLATFILE="~/refs/annotations/ncbirefflat.txt"
+GTFFILE="~/refs/annotations/GRCh38.p2_AR107.chr20.gtf"
 
 # EXECUTABLE LOCATIONS (some on path)
-HASSL=" /home/ubuntu/HASSL"
-HISAT=" /home/ubuntu/install/hisat/hisat "
-PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
-FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
-SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
-SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
+HASSL="~/local/lib/hassl"
+HISAT="~/local/usr/local/hisat/hisat"
+PICARD="java -jar /opt/sam/rhel6/picard-tools/picard-tools-1.126/picard.jar"
+FEATURECOUNTS="~/local/usr/local/subread-1.4.6-p4-source/bin/featureCounts"
+SAMTOOLS_ROCKS="samtools"
+SAMTOOLS="samtools"
 
 #set the filename of the file with the list of accessions   
 try:

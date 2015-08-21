@@ -9,8 +9,6 @@ lib/ncbirefflat.txt
 lib/refFlat.txt
 lib/GRC*
 lib/ncbirefflat.txt
-.DS_Store
-.DS_Store
 bams/
 counts/
 log/
@@ -19,3 +17,4 @@ t/bams/
 t/counts/
 t/log/
 t/qc/
+t/collate.*
