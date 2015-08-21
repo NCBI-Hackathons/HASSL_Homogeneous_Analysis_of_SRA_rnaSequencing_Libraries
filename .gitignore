@@ -11,3 +11,11 @@ lib/GRC*
 lib/ncbirefflat.txt
 .DS_Store
 .DS_Store
+bams/
+counts/
+log/
+qc/
+t/bams/
+t/counts/
+t/log/
+t/qc/
