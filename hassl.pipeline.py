@@ -26,13 +26,14 @@ SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
 try:
   config["ACCESSION_FILE"]
 except KeyError: 
-  filename = "ACCESSIONS"
+  filename = "accessions.txt"
 else:
   filename = config["ACCESSION_FILE"]
-  
 
-SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
-SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
+
+#SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
+#SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
+SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 try: 
   config["WORKING_DIR"]
@@ -61,24 +62,24 @@ rule project_counts:
 rule perform_counting: 
   output: "counts/{sample}.GRCh38.ens77.featureCounts.counts"
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
-  log: "log/{wildcards.sample}.featureCounts.log"
+  log: "log/{sample}.featureCounts.log"
   threads: THREADS
   message: "performing featureCounting with {threads} threads on genes in {input}"
-  shell: "{FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam  2> log/{wildcards.sample}.featureCounts.log"
+  shell: "{FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam 2> {log}"
 
 rule qc_check: 
   output: touch("log/{sample}.qc_check.done")
   input: "qc/{sample}.GRCh38.ens77.hisat.crsm"
-  log: "log/{wildcards.sample}.perl_qc.log"
+  log: "log/{sample}.perl_qc.log"
   message: "checking quality stats of {input} with perl script"
-  shell: " perl {HASSL}/scripts/qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> log/{wildcards.sample}.perl_qc.log"
+  shell: " perl {HASSL}/scripts/qc.pl --maplogfile log/{wildcards.sample}.hisat.log --metricsfile qc/{wildcards.sample}.GRCh38.ens77.hisat.crsm --sra {wildcards.sample} 2> {log}"
 
 rule picard_rnaseq_qual: 
   output: "qc/{sample}.GRCh38.ens77.hisat.crsm"
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
-  log: "log/{wildcards.sample}.picard_rnametrics.log"
+  log: "log/{sample}.picard_rnametrics.log"
   message: "running picard rna qc stats on {input}"
-  shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={input} OUTPUT={output} 2> log/{wildcards.sample}.picard_rnametrics.log"
+  shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={input} OUTPUT={output} 2> {log}"
 
 rule index_bam: 
   output: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
@@ -101,11 +102,9 @@ rule sam_to_bam:
 
 rule hisat_alignment:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
-  input: SPLICEFILE 
   threads: THREADS
-  log: "log/{sample}.hisat.alignment.log"
+  log: "log/{sample}.hisat.log"
   message: "running second pass hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
-
+  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
 
 

@@ -16,7 +16,7 @@ while (<$ACC>) {
   push (@acc, $acc);
   
   # parse Picard CRSM output
-  my $crsm = "$acc.GRCh38.p4.hisat.crsm";
+  my $crsm = "qc/$acc.GRCh38.ens77.hisat.crsm";
   if (-e $crsm) {
     open (my $CRSM, "<", $crsm);
     my $hfound = 0;
@@ -35,7 +35,7 @@ while (<$ACC>) {
   }
 
   # parse Hisat log for percent mapped  
-  my $log =  "$acc.hisat.two.log";
+  my $log =  "log/$acc.hisat.log";
   if (-e $log) {
     open (my $PM, "<", $log);
     while (<$PM>) {
@@ -47,14 +47,14 @@ while (<$ACC>) {
     close($PM);
   }    
 
-  # parse HTSeq counts
-  my $counts = "$acc.GRCh38.p4.HTSeq.counts";
+  # parse featureCounts counts
+  my $counts = "counts/$acc.GRCh38.ens77.featureCounts.counts";
   if (-e $counts) {
     open (my $C, "<", $counts);
     while (<$C>) {
+      next if ($. == 1 || $. == 2); # skip the two header lines
       chomp;
-      next if /^__/;
-      my ($gene, $cnt) = split /\t/,$_;
+      my ($gene, $cnt) = (split /\t/,$_)[0,6];
       if ($gotgenes == 0) {    # only need to get Gene names on the first SRA
         push (@countsgenes, $gene);
       }
