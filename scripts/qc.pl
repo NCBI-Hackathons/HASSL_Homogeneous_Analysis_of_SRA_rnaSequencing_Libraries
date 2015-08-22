@@ -98,6 +98,6 @@ foreach my $qcname (keys %actual) {
 my $sra = $o->{sra};
 unlink ("$sra.pass");
 unlink ("$sra.fail");
-($ok) ? `touch $sra.pass` : `touch $sra.fail`;
+($ok) ? `touch log/$sra.pass` : `touch log/$sra.fail`;
 
 
