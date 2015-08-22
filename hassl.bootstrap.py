@@ -1,4 +1,5 @@
 #SCRIPT TO GATHER REFERENCES AND ANNOTATION FILES FOR COBRASNAKE RNASEQ PIPELINE
+HISAT_BUILD="~/install/hisat/hisat-build"
 
 rule all:
 	input: "lib/ncbirefflat.txt",
@@ -13,7 +14,7 @@ rule index:
 	        "lib/GRCh38.p4.2.bt2", "lib/GRCh38.p4.4.bt2", "lib/GRCh38.p4.6.bt2", "lib/GRCh38.p4.rev.2.bt2", "lib/GRCh38.p4.rev.6.bt2"
 	input: "lib/GCF_000001405.30_GRCh38.p4_genomic.fna"
 	message: "indexing human genome"
-	shell: "hisat-build {input} lib/GRCh38.p4"
+	shell: "{HISAT_BUILD} {input} lib/GRCh38.p4"
 
 rule gunzipHumRef:
 	output: "lib/GCF_000001405.30_GRCh38.p4_genomic.fna" 
@@ -43,7 +44,7 @@ rule convert_refflat:
 	output: "lib/ncbirefflat.txt"
 	input: "lib/refFlat.txt"
 	message: "running refflat converter"
-	shell: "perl refflat2ncbi_refflat.pl {input} > {output}"
+	shell: "perl scripts/refflat2ncbi_refflat.pl {input} > {output}"
 
 rule gunzip_refflat:
 	output: temp("lib/refFlat.txt")
