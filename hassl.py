@@ -152,6 +152,11 @@ rule get_humanreference:
   shell: "wget -P {REFERENCE_DIR} ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF_000001405.30_GRCh38.p4/GCF_000001405.30_GRCh38.p4_genomic.fna.gz"
 
 
+rule get_splicesites:
+  output: REFERENCE_DIR + "/" + SPLICEFILE_NAME
+  message: "downloading splicesites from s3"
+  shell: "wget -P {REFERENCE_DIR} {SPLICEFILE_URL}"
+
 
 rule get_gtf:
   output: REFERENCE_DIR + "/" + GTFFILE_NAME
