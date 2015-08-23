@@ -7,7 +7,7 @@ import os
 #set the number of threads to use in alignments and sorting
 THREADS=3
 
-REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL/"
+REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
 REFERENCE_DIR="/mnt/hassl/lib"
 HISAT_REFERENCE_DIR=REFERENCE_DIR + "/hisat_indexes"
 HISATREF_BASENAME="Homo_sapiens.GRCh38.dna.toplevel"
