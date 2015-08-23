@@ -154,7 +154,7 @@ rule get_humanreference:
 
 
 rule get_gtf:
-  output: ("{REFERENCE_DIR}/{GTFFILE_NAME}"
+  output: "{REFERENCE_DIR}/{GTFFILE_NAME}"
   message: "downloading GTF from s3"
   shell: "wget -P {REFERENCE_DIR} {REFERENCE_BASE_URL}/{GTFFILE_NAME}"
   
