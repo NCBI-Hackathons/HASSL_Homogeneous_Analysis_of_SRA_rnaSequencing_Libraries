@@ -136,12 +136,12 @@ rule resources:
     #       "{REFERENCE_DIR}/GRCh38.p4.2.bt2", "{REFERENCE_DIR}/GRCh38.p4.4.bt2", "{REFERENCE_DIR}/GRCh38.p4.6.bt2", "{REFERENCE_DIR}/GRCh38.p4.rev.2.bt2", "{REFERENCE_DIR}/GRCh38.p4.rev.6.bt2"
 
 # Reference genome (h38)
-rule index:
+rule hasat_index:
   output: "{REFERENCE_DIR}/GRCh38.p4.1.bt2", "{REFERENCE_DIR}/GRCh38.p4.3.bt2", "{REFERENCE_DIR}/GRCh38.p4.5.bt2", "{REFERENCE_DIR}/GRCh38.p4.rev.1.bt2", "{REFERENCE_DIR}/GRCh38.p4.rev.5.bt2",
           "{REFERENCE_DIR}/GRCh38.p4.2.bt2", "{REFERENCE_DIR}/GRCh38.p4.4.bt2", "{REFERENCE_DIR}/GRCh38.p4.6.bt2", "{REFERENCE_DIR}/GRCh38.p4.rev.2.bt2", "{REFERENCE_DIR}/GRCh38.p4.rev.6.bt2"
   input: "{REFERENCE_DIR}/GCF_000001405.30_GRCh38.p4_genomic.fna"
   message: "indexing human genome"
-  shell: "{HISAT_BUILD} {input} {REFERENCE_DIR}/GRCh38.p4"
+  shell: "{HISAT_BUILD} {input} {REFERENCE_DIR}/{HISATREF_BASENAME}"
 
 rule gunzipHumRef:
   output: "{REFERENCE_DIR}/GCF_000001405.30_GRCh38.p4_genomic.fna" 
