@@ -9,13 +9,14 @@ THREADS=3
 
 REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
 REFERENCE_DIR="/mnt/hassl/lib"
-HISAT_REFERENCE_DIR=REFERENCE_DIR + "/hisat_indexes"
-HISATREF_BASENAME="Homo_sapiens.GRCh38.dna.toplevel"
-PICARDFLATFILE_NAME="GRCh38.77.compatible.ucsc.picard.refflat.txt"
-GTFFILE_NAME="Ensembl.GRCh38.77.gtf"
-SPLICEFILE_NAME="Ensembl.GRCh38.77.splicesites.txt"
+HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
+HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"
+PICARDFLATFILE_NAME = "GRCh38.77.compatible.ucsc.picard.refflat.txt"
+GTFFILE_NAME = "Ensembl.GRCh38.77.gtf"
+SPLICEFILE_NAME = "Ensembl.GRCh38.77.splicesites.txt"
 
-HISATREF=HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME
+#HISATREF=HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME
+HISATREF=REFERENCE_DIR + "/" + HISATREF_BASENAME
 PICARDFLATFILE=REFERENCE_DIR+ "/" + PICARDFLATFILE_NAME
 GTFFILE=REFERENCE_DIR+ "/" + GTFFILE_NAME
 SPLICEFILE=REFERENCE_DIR+ "/" + SPLICEFILE_NAME
@@ -113,6 +114,7 @@ rule sam_to_bam:
 
 rule hisat_alignment:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2"
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running second pass hisat alignment on {wildcards.sample} with {threads} threads"
