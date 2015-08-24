@@ -14,8 +14,8 @@ GTFFILE="~/refs/annotations/GRCh38.p2_AR107.chr20.gtf"
 # EXECUTABLE LOCATIONS (some on path)
 HASSL="~/local/lib/hassl"
 HISAT="~/local/usr/local/hisat/hisat"
-PICARD="java -jar /opt/sam/rhel6/picard-tools/picard-tools-1.126/picard.jar"
-FEATURECOUNTS="~/local/usr/local/subread-1.4.6-p4-source/bin/featureCounts"
+PICARD="java -jar ~/local/usr/local/picard-tools-1.137/picard.jar"
+FEATURECOUNTS="~/local/usr/local/subread/bin/featureCounts"
 SAMTOOLS_ROCKS="samtools"
 SAMTOOLS="samtools"
 
