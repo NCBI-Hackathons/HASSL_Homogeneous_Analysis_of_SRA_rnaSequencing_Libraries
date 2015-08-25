@@ -95,13 +95,13 @@ rule picard_rnaseq_qual:
   shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={input[0]} OUTPUT={output} 2> {log}"
 
 rule index_bam: 
-  output: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai"
+  output: temp("bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai")
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
   message: "indexing bam alignment file {input}"
   shell: " {SAMTOOLS} index {input} {output} "
 
 rule sort_bam:
-  output: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
+  output: temp("bams/{sample}.GRCh38.ens77.hisat.sorted.bam")
   input: "bams/{sample}.GRCh38.ens77.hisat.bam"
   threads: THREADS
   message: "sorting {input} to {output}"
