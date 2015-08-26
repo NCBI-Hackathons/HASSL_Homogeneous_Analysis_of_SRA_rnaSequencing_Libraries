@@ -5,13 +5,13 @@
 import os 
 
 #set the number of threads to use in alignments and sorting
-THREADS=3
+THREADS=9
 
 REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
-REFERENCE_DIR="/mnt/hassl/lib"
-HISAT_REFERENCE_DIR = REFERENCE_DIR 
-#HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"
-HISATREF_BASENAME = "GRCh38.p4"
+REFERENCE_DIR="/mnt/resources"
+HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
+HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"
+#HISATREF_BASENAME = "GRCh38.p4"
 PICARDFLATFILE_NAME = "GRCh38.77.compatible.ucsc.picard.refflat.txt"
 GTFFILE_NAME = "Ensembl.GRCh38.77.gtf"
 SPLICEFILE_NAME = "Ensembl.GRCh38.77.splicesites.txt"
@@ -68,7 +68,7 @@ rule project_counts:
   output: "project.featureCounts"
   input: GTFFILE, expand("bams/{sample}.GRCh38.ens77.hisat.sorted.bam", sample=SAMPLES), GTFFILE
   log: "log/project.featureCounting.log"
-  threads: THREADS 
+  threads: 30 
   message: "performing overall project feature counting"
   shell: "{FEATURECOUNTS} -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o project.featureCounts bams/*.bam 2>&1 > log/project.featureCounting.log"
 
@@ -76,7 +76,7 @@ rule perform_counting:
   output: "counts/{sample}.GRCh38.ens77.featureCounts.counts"
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam", GTFFILE
   log: "log/{sample}.featureCounts.log"
-  threads: THREADS
+  threads: 3
   message: "performing featureCounting with {threads} threads on genes in {input}"
   shell: "{FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam 2> {log}"
 
