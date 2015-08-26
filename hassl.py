@@ -115,7 +115,7 @@ rule sam_to_bam:
 
 rule hisat_alignment:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2"
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running second pass hisat alignment on {wildcards.sample} with {threads} threads"
