@@ -4,15 +4,15 @@
 
 import os 
 
-#set the number of threads to use in alignments and sorting
+#set the number of threads to use for alignment and feature counting 
 THREADS=3
 
-REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
 REFERENCE_DIR="/mnt/resources"
 HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
-HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna_rm.toplevel"
+HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna_rm.toplevel"   # REPEAT MASKED FASTA
+#HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"     # UNMASKED FASTA
 FASTA_URL="ftp://ftp.ensembl.org/pub/release-81/fasta/homo_sapiens/dna/" + HISATREF_BASENAME + ".fa.gz"
-#HISATREF_BASENAME = "GRCh38.p4"
+
 PICARDFLATFILE_NAME = "GRCh38.77.compatible.ucsc.picard.refflat.txt"
 GTFFILE_NAME = "Ensembl.GRCh38.77.gtf"
 SPLICEFILE_NAME = "Ensembl.GRCh38.77.splicesites.txt"
@@ -21,12 +21,15 @@ HISATREF=HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME
 PICARDFLATFILE=REFERENCE_DIR+ "/" + PICARDFLATFILE_NAME
 GTFFILE=REFERENCE_DIR+ "/" + GTFFILE_NAME
 SPLICEFILE=REFERENCE_DIR+ "/" + SPLICEFILE_NAME
+
+REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
+
 PICARDFLATFILE_URL=REFERENCE_BASE_URL+ "/" + PICARDFLATFILE_NAME
 GTFFILE_URL=REFERENCE_BASE_URL+ "/" + GTFFILE_NAME
 SPLICEFILE_URL=REFERENCE_BASE_URL+ "/" + SPLICEFILE_NAME
 
 
-# EXECUTABLE LOCATIONS (some on path)
+# EXECUTABLE LOCATIONS (some on path probably)
 HASSL=" /home/ubuntu/HASSL"
 HISAT=" /home/ubuntu/install/hisat/hisat "
 HISAT_BUILD="~/install/hisat/hisat-build"
@@ -156,19 +159,19 @@ rule get_humanreference:
 
 rule get_splicesites:
   output: REFERENCE_DIR + "/" + SPLICEFILE_NAME
-  message: "downloading splicesites from s3"
+  message: "downloading splicesites from {SPLICEFILE_URL}"
   shell: "wget -P {REFERENCE_DIR} {SPLICEFILE_URL}"
 
 
 rule get_gtf:
   output: REFERENCE_DIR + "/" + GTFFILE_NAME
-  message: "downloading GTF from s3"
-  shell: "wget -P {REFERENCE_DIR} {REFERENCE_BASE_URL}/{GTFFILE_NAME}"
+  message: "downloading GTF from {GTFFILE_URL}"
+  shell: "wget -P {REFERENCE_DIR} {GTFFILE_URL}"
   
   
 rule get_refflat:
   output: REFERENCE_DIR + "/" + PICARDFLATFILE_NAME
-  message: "downloading refflat from s3"
+  message: "downloading refflat from {PICARDFLATFILE_URL}"
   shell: "wget -P {REFERENCE_DIR} {PICARDFLATFILE_URL}"
 
 
