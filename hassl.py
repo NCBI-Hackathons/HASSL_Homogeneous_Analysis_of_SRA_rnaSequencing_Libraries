@@ -43,10 +43,16 @@ except KeyError:
 else:
   filename = config["ACCESSION_FILE"]
 
+try: 
+  open(filename)
+except FileNotFoundError:
+  SAMPLES = []
+else: 
+  SAMPLES = [line.rstrip('\n') for line in open(filename)]
+
 
 #SAMPLES_FROM_FILE = [line.rstrip('\n') for line in open(filename)]
 #SAMPLES = [s for s in SAMPLES_FROM_FILE if s]
-SAMPLES = [line.rstrip('\n') for line in open(filename)]
 
 try: 
   config["WORKING_DIR"]
