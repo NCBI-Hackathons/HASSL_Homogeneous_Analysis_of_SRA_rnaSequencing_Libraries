@@ -138,7 +138,7 @@ rule resources:
 
 rule hasat_index:
   output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
+  input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
   message: "hisat-build indexing human genome {input}"
   shell: "{HISAT_BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
 
