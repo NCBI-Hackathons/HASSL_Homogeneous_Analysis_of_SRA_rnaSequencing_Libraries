@@ -7,6 +7,7 @@ import os
 #set the number of threads to use for alignment and feature counting 
 THREADS=3
 
+# USE ABSOLUTE PATHS!
 REFERENCE_DIR="/mnt/resources"
 HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
 HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna_rm.toplevel"   # REPEAT MASKED FASTA
@@ -127,7 +128,7 @@ rule hisat_alignment:
   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
   threads: THREADS
   log: "log/{sample}.hisat.log"
-  message: "running second pass hisat alignment on {wildcards.sample} with {threads} threads"
+  message: "running hisat alignment on {wildcards.sample} with {threads} threads"
   shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
 
 
@@ -139,21 +140,21 @@ rule hisat_alignment:
 rule resources:
   input:  [PICARDFLATFILE, GTFFILE, SPLICEFILE, HISAT_REFERENCE_DIR+"/"+HISATREF_BASENAME+".rev.2.bt2l"]
 
-rule hasat_index:
+rule hisat_index:
   output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
   input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
   message: "hisat-build indexing human genome {input}"
   shell: "{HISAT_BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
 
-rule gunzipHumRef:
+rule gunzip_reference_fasta:
   output: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
   input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa.gz"
-  message: "extracting human genome fasta.gz"
+  message: "extracting human genome fasta {input}"
   shell: "gunzip -c {input} > {output}"
   
 rule get_humanreference:
   output: temp(REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa.gz")
-  message: "downloading human reference genome"
+  message: "downloading human reference genome from {FASTA_URL}"
   shell: "wget -P {REFERENCE_DIR} {FASTA_URL}"
 
 
