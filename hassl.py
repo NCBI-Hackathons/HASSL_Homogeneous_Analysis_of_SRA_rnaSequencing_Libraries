@@ -15,7 +15,7 @@ HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna_rm.toplevel"   # REPEAT MASKED FAST
 FASTA_URL="ftp://ftp.ensembl.org/pub/release-81/fasta/homo_sapiens/dna/" + HISATREF_BASENAME + ".fa.gz"
 
 PICARDFLATFILE_NAME = "GRCh38.77.compatible.ucsc.picard.refflat.txt"
-GTFFILE_NAME = "Ensembl.GRCh38.77.gtf"
+GTFFILE_NAME = "Homo_sapiens.GRCh38.81.gtf"
 SPLICEFILE_NAME = "Ensembl.GRCh38.77.splicesites.txt"
 
 HISATREF=HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME
@@ -26,7 +26,7 @@ SPLICEFILE=REFERENCE_DIR+ "/" + SPLICEFILE_NAME
 REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
 
 PICARDFLATFILE_URL=REFERENCE_BASE_URL+ "/" + PICARDFLATFILE_NAME
-GTFFILE_URL=REFERENCE_BASE_URL+ "/" + GTFFILE_NAME
+GTFFILE_URL=REFERENCE_BASE_URL+ "/" + GTFFILE_NAME + ".gz"
 SPLICEFILE_URL=REFERENCE_BASE_URL+ "/" + SPLICEFILE_NAME
 
 
@@ -86,7 +86,7 @@ rule perform_counting:
   output: "counts/{sample}.GRCh38.ens77.featureCounts.counts"
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam", GTFFILE
   log: "log/{sample}.featureCounts.log"
-  threads: 3
+  threads: THREADS
   message: "performing featureCounting with {threads} threads on genes in {input}"
   shell: "{FEATURECOUNTS}  -T {threads} --primary -F GTF -t exon -g gene_id -a {GTFFILE} -o counts/{wildcards.sample}.GRCh38.ens77.featureCounts.counts bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted.bam 2> {log}"
 
@@ -123,14 +123,22 @@ rule sam_to_bam:
   message: "converting sam to bam: {input} to {output}"
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
-rule hisat_alignment:
+#REFACTOR FOR TWO-PASS ALIGNMENT!
+rule hisat_alignment_two:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l", "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{wildcards.sample}.novel.splicesites"
+  threads: THREADS
+  log: "log/{sample}.hisat.log"
+  message: "running hisat alignment on {wildcards.sample} with {threads} threads"
+  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
+
+rule hisat_alignment_one:
+  output: temp("bams/{sample}.GRCh38.ens77.hisat.temp.sam"), "splicesites/{wildcards.sample}.novel.splicesites"
   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
-
+  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} --novel-splicesite-outfile splicesites/{wildcards.sample}.novel.splicesites  -S bams/{wildcards.sample}.GRCh38.ens77.hisat.temp.sam  2> {log}"
 
 
 
@@ -152,26 +160,31 @@ rule gunzip_reference_fasta:
   message: "extracting human genome fasta {input}"
   shell: "gunzip -c {input} > {output}"
   
-rule get_humanreference:
+rule get_reference_fasta:
   output: temp(REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa.gz")
   message: "downloading human reference genome from {FASTA_URL}"
   shell: "wget -P {REFERENCE_DIR} {FASTA_URL}"
 
 
 rule get_splicesites:
-  output: REFERENCE_DIR + "/" + SPLICEFILE_NAME
+  output: SPLICEFILE
   message: "downloading splicesites from {SPLICEFILE_URL}"
   shell: "wget -P {REFERENCE_DIR} {SPLICEFILE_URL}"
 
+rule gunzip_gtf: 
+  output: GTFFILE
+  input: GTFFILE + ".gz"
+  message: "gunzipping GTF file {input}"
+  shell: "gunzip -c {input} > {output}"
 
 rule get_gtf:
-  output: REFERENCE_DIR + "/" + GTFFILE_NAME
+  output: GTFFILE + ".gz"
   message: "downloading GTF from {GTFFILE_URL}"
   shell: "wget -P {REFERENCE_DIR} {GTFFILE_URL}"
   
   
 rule get_refflat:
-  output: REFERENCE_DIR + "/" + PICARDFLATFILE_NAME
+  output: PICARDFLATFILE
   message: "downloading refflat from {PICARDFLATFILE_URL}"
   shell: "wget -P {REFERENCE_DIR} {PICARDFLATFILE_URL}"
 
