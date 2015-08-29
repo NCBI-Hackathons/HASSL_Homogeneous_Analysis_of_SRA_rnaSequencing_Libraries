@@ -124,21 +124,22 @@ rule sam_to_bam:
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
 #REFACTOR FOR TWO-PASS ALIGNMENT!
-rule hisat_alignment_two:
+rule hisat_alignment:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l", "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running informed hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"
+  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
 
-rule hisat_alignment_one:
-  output: temp("bams/{sample}.GRCh38.ens77.hisat.temp.sam"), "splicesites/{sample}.novel.splicesites"
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
-  threads: THREADS
-  log: "log/{sample}.hisat.log"
-  message: "running primary hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} --novel-splicesite-outfile splicesites/{wildcards.sample}.novel.splicesites  -S bams/{wildcards.sample}.GRCh38.ens77.hisat.temp.sam  2> {log}"
+# HISAT hangs if you do two pass alignment.!!!!!!!! 
+# rule hisat_alignment_one:
+#   output: temp("bams/{sample}.GRCh38.ens77.hisat.temp.sam"), "splicesites/{sample}.novel.splicesites"
+#   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
+#   threads: THREADS
+#   log: "log/{sample}.hisat.log"
+#   message: "running primary hisat alignment on {wildcards.sample} with {threads} threads"
+#   shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} --novel-splicesite-outfile splicesites/{wildcards.sample}.novel.splicesites  -S bams/{wildcards.sample}.GRCh38.ens77.hisat.temp.sam  2> {log}"
 
 
 
