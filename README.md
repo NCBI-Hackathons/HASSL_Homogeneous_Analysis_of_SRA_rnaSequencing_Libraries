@@ -7,9 +7,9 @@ output both sorted bam alignments and raw read counts for each run quickly and u
 
 ## For the lazy (not a hassle if you have all the dependencies installed ;)
 ```
-snakemake -s setupsnake.py -j
+snakemake -s hassl.py resources -j
 echo SRR1200675 > ~/accessions.txt
-snakemake -s rattlesnake.py -j --config ACCESSION_FILE='~/accessions.txt'
+snakemake -s hassl.py -j --config ACCESSION_FILE='~/accessions.txt'
 ```
 
 This will produce the following output files:
@@ -25,9 +25,9 @@ This will produce the following output files:
 
 ## Setup your environment
 
-HASSL includes a handy setupsnake.py tool to gather references and build the
-hisat index for you.  This will put the GRCh38.p4 reference and annotation
-files in the `lib` directory and build the hisat index there as well.
+HASSL includes a handy resources tool to gather references and build the
+hisat index for you.  This will put the GRCh38 reference and annotation
+files in the designated reference directory and build the hisat index there as well.
 
 You will need to install the following before running `setupsnake.py`
 * [snakemake](https://bitbucket.org/johanneskoester/snakemake/wiki/Documentation#markdown-header-installation)
@@ -38,14 +38,16 @@ You will need to install the following before running `setupsnake.py`
 * Other dependencies: gunzip, wget
 
 Then run setup:
-`snakemake -s setupsnake.py -j `
+`snakemake -s hassl.py resources -j `
+
+Be aware of the computational resources required to get these files; unpacking the reference fasta file will take >30G HDD and indexing will need at least >10G RAM. 
 
 
 ## Run the pipeline
 
-Edit `rattlesnake.py` file to reflect the locations of your reference files
-and executables that HASSL will use.  The default location is the `lib`
-directory where `setupsnake.py` puts them.  Also, you may want to adjust the
+Edit `hassl.py` file to reflect the locations of your reference files
+and executables that HASSL will use.  The default location at the `/mnt`
+directory is where `hassl.py resources` will try put them. Also, you may want to adjust the
 threads to be equal to or less than the number of threads on your computer. 
 The variables that you need to examine are:
 

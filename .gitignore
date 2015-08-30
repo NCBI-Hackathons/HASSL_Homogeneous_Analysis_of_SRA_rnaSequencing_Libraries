@@ -1,16 +1,6 @@
 .DS_Store
-bin/
-*bam
-*sam
 .snakemake/
-lib/GCF_000001405.30_GRCh38.p4_genomic.fna
-lib/GCF_000001405.30_GRCh38.p4_genomic.gff
-lib/ncbirefflat.txt
-lib/refFlat.txt
-lib/GRC*
-lib/ncbirefflat.txt
-.DS_Store
-.DS_Store
+lib/
 bams/
 counts/
 log/
