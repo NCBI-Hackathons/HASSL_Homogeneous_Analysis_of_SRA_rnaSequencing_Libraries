@@ -59,6 +59,14 @@ Run it! with the command `snakemake -s hassl.py -j`. You'll probably want to be 
 
 HASSL automatically deletes the BAM files to save space. If you want to keep all you bam and bam.bai files, edit `hassl.py` by removing the `temp()` wrapper around the `output` file name in the `index_bam` and `sort_bam` rules.
 
+### Visualizing QC metrics
+
+After you run HASSL on a set of SRA accessions, collate all the Picard and counts output with the following:
+`scripts/collate.pl accessions.txt`. This will create two files `qc/collate.qc.tsv` and `counts/collate.counts.tsv`. Then you can create QC plots by running the following `cd qc; Rscript ../scripts/qc_plots.R` (requires ggplot2 and grid R packages). This will create a `qc_histogram.jpg` file with several graphs of important QC metrics.
+
+### Visualizing count histograms of genes
+In order to plot the count distributions of high coverage genes, run the following from the `counts` directory: `Rscript ../scripts/densityplots_genes.R` (requires DESeq2 and ggplot2 R packages).
+
 ### Dependencies
 * [snakemake](https://bitbucket.org/johanneskoester/snakemake/wiki/Documentation#markdown-header-installation)
 * [HISAT](https://github.com/infphilo/hisat/) - follow the HISAT directions to compile it with SRA support 
