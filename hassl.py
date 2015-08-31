@@ -5,7 +5,7 @@
 import os 
 
 #set the number of threads to use for alignment and feature counting 
-THREADS=14
+THREADS=12
 
 # USE ABSOLUTE PATHS!
 REFERENCE_DIR="/mnt/resources"
@@ -34,8 +34,8 @@ SPLICEFILE_URL=REFERENCE_BASE_URL+ "/" + SPLICEFILE_NAME
 HASSL=" /home/ubuntu/HASSL"
 HISAT=" /home/ubuntu/install/hisat/hisat "
 HISAT_BUILD="~/install/hisat/hisat-build"
-PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
-FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
+PICARD=" java -jar -Xmx4G /home/ubuntu/install/picard-tools-1.138/picard.jar "
+FEATURECOUNTS=" /home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
 SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
 SAMTOOLS=" /home/ubuntu/install/samtools/samtools "
 FASTQDUMP=" /home/ubuntu/install/sratoolkit.2.4.2-ubuntu64/bin/fastq-dump "
@@ -119,6 +119,7 @@ rule cp_bam:
 rule index_bam: 
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai")
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
+  priority: 52
   message: "indexing bam alignment file {input}"
   shell: " {SAMTOOLS} index {input} {output} "
 
@@ -126,12 +127,14 @@ rule sort_bam:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sorted.bam")
   input: "bams/{sample}.GRCh38.ens77.hisat.bam"
   threads: THREADS
+  priority: 51
   message: "sorting {input} to {output}"
   shell: " {SAMTOOLS_ROCKS} sort -@ {threads} {input} bams/{wildcards.sample}.GRCh38.ens77.hisat.sorted "
 
 rule sam_to_bam:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.bam")
   input: "bams/{sample}.GRCh38.ens77.hisat.sam"
+  priority: 50
   message: "converting sam to bam: {input} to {output}"
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
