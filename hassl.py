@@ -68,7 +68,7 @@ else:
 
 
 rule all: 
-  input: expand("counts/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES) , expand("log/{sample}.qc_check.done", sample=SAMPLES)
+  input: expand("/home/ubuntu/blood/bams/{sample}.GRCh38.ens77.hisat.sorted.bam", sample=SAMPLES) #, expand("log/{sample}.qc_check.done", sample=SAMPLES)
 
 
 rule clean: 
@@ -104,6 +104,14 @@ rule picard_rnaseq_qual:
   message: "running picard rna qc stats on {input}"
   shell: "{PICARD} CollectRnaSeqMetrics REF_FLAT={PICARDFLATFILE} STRAND=NONE INPUT={input[0]} OUTPUT={output} 2> {log}"
 
+
+rule cp_bam: 
+  output: "{OUTDIR}/{sample}.GRCh38.ens77.hisat.sorted.bam"
+  input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
+  message: "copying bam {input} {output}"
+  shell: "cp {input} {output}"
+
+
 rule index_bam: 
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sorted.bam.bai")
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
@@ -127,7 +135,7 @@ rule sam_to_bam:
 rule hisat_alignment:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
-  threads: THREADS - 2
+  threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
   shell: "  {FASTQDUMP}  -O fastq  {wildcards.sample} -Z   |   {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} -U -  -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
