@@ -39,6 +39,8 @@ FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCou
 SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
 SAMTOOLS=" /home/ubuntu/install/samtools/samtools "
 FASTQDUMP=" /home/ubuntu/install/sratoolkit.2.4.2-ubuntu64/bin/fastq-dump "
+VDBDUMP=" /home/ubuntu/install/sratoolkit.2.4.2-ubuntu64/bin/vdb-dump -f fastq "
+
 #set the filename of the file with the list of accessions   
 try:
   config["ACCESSION_FILE"]
@@ -140,7 +142,7 @@ rule hisat_alignment:
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "  {FASTQDUMP}  -O fastq  {wildcards.sample} -Z   |   {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} -U -  -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
+  shell: "  {VDBDUMP}  {wildcards.sample}  |   {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} -U -  -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
 
 
 
