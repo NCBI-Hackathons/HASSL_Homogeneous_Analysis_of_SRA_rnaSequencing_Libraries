@@ -37,8 +37,8 @@ HISAT_BUILD="~/install/hisat/hisat-build"
 PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
 SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
-SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
-
+SAMTOOLS=" /home/ubuntu/install/samtools/samtools "
+FASTQDUMP=" /home/ubuntu/install/sratoolkit.2.4.2-ubuntu64/bin/fastq-dump "
 #set the filename of the file with the list of accessions   
 try:
   config["ACCESSION_FILE"]
@@ -123,23 +123,19 @@ rule sam_to_bam:
   message: "converting sam to bam: {input} to {output}"
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
+
 rule hisat_alignment:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
-  threads: THREADS
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l", "fastq/{sample}.fastq.gz" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
+  threads: THREADS - 2
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
+  shell: "unpigz -c fastq/{wildcards.sample}.fastq.gz -p 3 | {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} -U -  -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
 
-# HISAT hangs if you do two pass alignment!???!!! Must Fix 
-# rule hisat_alignment_one:
-#   output: temp("bams/{sample}.GRCh38.ens77.hisat.temp.sam"), "splicesites/{sample}.novel.splicesites"
-#   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
-#   threads: THREADS
-#   log: "log/{sample}.hisat.log"
-#   message: "running primary hisat alignment on {wildcards.sample} with {threads} threads"
-#   shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} --novel-splicesite-outfile splicesites/{wildcards.sample}.novel.splicesites  -S bams/{wildcards.sample}.GRCh38.ens77.hisat.temp.sam  2> {log}"
-
+rule fastq_dump: 
+  output: temp("fastq/{sample}.fastq.gz")
+  message: "dumping fastqs from {sample}"
+  shell: "{FASTQDUMP}  -O fastq --gzip {wildcards.sample}"
 
 
 
