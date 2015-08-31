@@ -5,7 +5,7 @@
 import os 
 
 #set the number of threads to use for alignment and feature counting 
-THREADS=3
+THREADS=14
 
 # USE ABSOLUTE PATHS!
 REFERENCE_DIR="/mnt/resources"
@@ -134,6 +134,7 @@ rule hisat_alignment:
 
 rule fastq_dump: 
   output: temp("fastq/{sample}.fastq.gz")
+  threads: THREADS
   message: "dumping fastqs from {wildcards.sample}"
   shell: "{FASTQDUMP}  -O fastq --gzip {wildcards.sample}"
 
