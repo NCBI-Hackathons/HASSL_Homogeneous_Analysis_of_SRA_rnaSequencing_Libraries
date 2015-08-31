@@ -12,16 +12,11 @@ echo SRR1200675 > accessions.txt
 snakemake -s hassl.py -j --config ACCESSION_FILE='accessions.txt'
 ```
 
-This will produce the following output files (@TODO needs updated for new release)
-
-* SRR1200675.GRCh38.p4.hisat.sorted.bam - HISAT 2-pass mapped BAM file of the reads from SRR1200675
-* SRR1200675.hisat.novel.splicesites.txt - HISAT generated file of denovo splicesites
-* SRR1200675.hisat.one.log - HISAT log file from the first pass
-* SRR1200675.hisat.two.log - HISAT log file form the second pass
-* SRR1200675.GRCh38.p4.hisat.crsm - Picard CollectRnaSeqMetrics output file
+This will produce the following output files
+* SRR1200675.featureCounts.counts - featureCounts raw count file
+* SRR1200675.hisat.crsm - Picard CollectRnaSeqMetrics output file
 * SRR1200675.pass - based on the Picard output file, this BAM file passed QC cutoffs
-* SRR1200675.GRCh38.p4.featureCounts.counts - featureCounts raw count file
-
+* various log files found in `log/`
 
 ## Setup your environment
 
@@ -55,7 +50,11 @@ Isolate the run_accession IDs from SRA you want to run and put them in a
 file line by line.  Do not leave any lines blank.  The pipeline defaults to
 look for this input file as `accessions.txt`.
 
-Run it! with the command `snakemake -s hassl.py -j`. You'll probably want to be on a fairly large machine for this (16 cpus). Refer to the snakemake documentation on how to (trivially!) run snakemake efficiently in a cluster environment that requires job submission.
+Run it!
+
+`snakemake -s hassl.py -j`
+
+You'll probably want to be on a fairly large machine for this (16 cpus). Refer to the snakemake documentation on how to (trivially!) run snakemake efficiently in a cluster environment that requires job submission.
 
 HASSL automatically deletes the BAM files to save space. If you want to keep all you bam and bam.bai files, edit `hassl.py` by removing the `temp()` wrapper around the `output` file name in the `index_bam` and `sort_bam` rules.
 
