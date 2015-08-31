@@ -126,17 +126,17 @@ rule sam_to_bam:
 
 rule hisat_alignment:
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l", "fastq/{sample}.fastq.gz" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l", "fastq/{sample}.fastq" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
   threads: THREADS - 2
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "unpigz -c fastq/{wildcards.sample}.fastq.gz -p 3 | {HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} -U -  -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
+  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} -U fastq/{wildcards.sample}.fastq  -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
 
 rule fastq_dump: 
-  output: temp("fastq/{sample}.fastq.gz")
+  output: temp("fastq/{sample}.fastq")
   threads: THREADS
   message: "dumping fastqs from {wildcards.sample}"
-  shell: "{FASTQDUMP}  -O fastq --gzip {wildcards.sample}"
+  shell: "{FASTQDUMP}  -O fastq  {wildcards.sample}"
 
 
 
