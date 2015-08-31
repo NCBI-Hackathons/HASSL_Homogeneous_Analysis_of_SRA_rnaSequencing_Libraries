@@ -8,11 +8,11 @@ output both sorted bam alignments and raw read counts for each run quickly and u
 ## For the lazy (not a hassle if you have all the dependencies installed ;)
 ```
 snakemake -s hassl.py resources -j
-echo SRR1200675 > ~/accessions.txt
-snakemake -s hassl.py -j --config ACCESSION_FILE='~/accessions.txt'
+echo SRR1200675 > accessions.txt
+snakemake -s hassl.py -j --config ACCESSION_FILE='accessions.txt'
 ```
 
-This will produce the following output files:
+This will produce the following output files (@TODO needs updated for new release)
 
 * SRR1200675.GRCh38.p4.hisat.sorted.bam - HISAT 2-pass mapped BAM file of the reads from SRR1200675
 * SRR1200675.hisat.novel.splicesites.txt - HISAT generated file of denovo splicesites
@@ -27,50 +27,47 @@ This will produce the following output files:
 
 HASSL includes a handy resources tool to gather references and build the
 hisat index for you.  This will put the GRCh38 reference and annotation
-files in the designated reference directory and build the hisat index there as well.
+files in a reference directory (default is `/mnt/resources`) and build the hisat index there as well. Make sure you have write access to this directory. If you want to change this directory, change the `REFERENCE_DIR` variable in `hassl.py` to a directory that you have write access to.
 
-You will need to install the following before running `setupsnake.py`
+In order to setup your environment, you'll need to install two programs and then edit the `HISAT_BUILD` variable in `hassl.py` so it knows where to find it.
 * [snakemake](https://bitbucket.org/johanneskoester/snakemake/wiki/Documentation#markdown-header-installation)
-* [HISAT](https://github.com/infphilo/hisat/) - follow the HISAT directions to compile it with SRA support 
-* [featureCounts](http://subread.sourceforge.net/)
-* [Picard](https://broadinstitute.github.io/picard/)
-* [samtools](https://github.com/samtools/samtools)
+* [hisat](https://github.com/infphilo/hisat/) - follow the HISAT directions to compile it with SRA support 
 * Other dependencies: gunzip, wget
 
-Then run setup:
-`snakemake -s hassl.py resources -j `
+Then run hassl to setup your environment: `snakemake -s hassl.py resources -j `
 
 Be aware of the computational resources required to get these files; unpacking the reference fasta file will take >30G HDD and indexing will need at least >10G RAM. 
 
 
 ## Run the pipeline
 
-Edit `hassl.py` file to reflect the locations of your reference files
-and executables that HASSL will use.  The default location at the `/mnt`
-directory is where `hassl.py resources` will try put them. Also, you may want to adjust the
-threads to be equal to or less than the number of threads on your computer. 
-The variables that you need to examine are:
+Before running HASSL, you will need to install the following programs:
+* [featureCounts](http://subread.sourceforge.net/)
+* [Picard](https://broadinstitute.github.io/picard/)
+* [samtools rocks] (https://github.com/dnanexus/samtools)
+* [samtools](https://github.com/samtools/samtools)
 
-* HISATREF
-* GTFFILE
-* THREADS
-* HISAT
-* PICARD
-* featureCounts
-* SAMTOOLS
+Edit `hassl.py` to reflect the location of the HASSL install directory (`HASSL`), your reference files, and executables that HASSL will use (see the `EXECUTABLE LOCATIONS` section).  The default location at the `/mnt`
+directory is where `hassl.py resources` will try put them. Also, you may want to adjust the
+threads (`THREADS`) to be equal to or less than the number of threads on your computer.
 
 Isolate the run_accession IDs from SRA you want to run and put them in a
 file line by line.  Do not leave any lines blank.  The pipeline defaults to
-look for this input file as `~/accessions.txt`.
+look for this input file as `accessions.txt`.
 
-Run it! You'll probably want to be on a fairly large machine for this (16 cpus)
+Run it! with the command `snakemake -s hassl.py -j`. You'll probably want to be on a fairly large machine for this (16 cpus). Refer to the snakemake documentation on how to (trivially!) run snakemake efficiently in a cluster environment that requires job submission.
 
-dependencies: snakemake, hisat (built with SRA support; see [hisat
-manual](https://github.com/infphilo/hisat/blob/master/MANUAL.markdown)),
-samtools, featureCounts (from the subread package), perl
+HASSL automatically deletes the BAM files to save space. If you want to keep all you bam and bam.bai files, edit `hassl.py` by removing the `temp()` wrapper around the `output` file name in the `index_bam` and `sort_bam` rules.
+
+### Dependencies
+* [snakemake](https://bitbucket.org/johanneskoester/snakemake/wiki/Documentation#markdown-header-installation)
+* [HISAT](https://github.com/infphilo/hisat/) - follow the HISAT directions to compile it with SRA support 
+* [featureCounts](http://subread.sourceforge.net/)
+* [Picard](https://broadinstitute.github.io/picard/)
+* [samtools rocks] (https://github.com/dnanexus/samtools)
+* [samtools](https://github.com/samtools/samtools)
+* Other dependencies: gunzip, wget, perl
 
 
-You'll want to refer to the snakemake documentation on how to (trivially!)
-run snakemake efficiently in a cluster environment that requires
-job submission.
+
 
