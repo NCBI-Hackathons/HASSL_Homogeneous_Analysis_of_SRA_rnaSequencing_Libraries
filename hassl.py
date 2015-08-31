@@ -134,7 +134,7 @@ rule hisat_alignment:
 
 rule fastq_dump: 
   output: temp("fastq/{sample}.fastq.gz")
-  message: "dumping fastqs from {sample}"
+  message: "dumping fastqs from {wildcards.sample}"
   shell: "{FASTQDUMP}  -O fastq --gzip {wildcards.sample}"
 
 
