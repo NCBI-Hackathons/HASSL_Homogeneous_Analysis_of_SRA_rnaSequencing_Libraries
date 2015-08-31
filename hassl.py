@@ -108,8 +108,10 @@ rule picard_rnaseq_qual:
 rule cp_bam: 
   output: "{OUTDIR}/{sample}.GRCh38.ens77.hisat.sorted.bam"
   input: "bams/{sample}.GRCh38.ens77.hisat.sorted.bam"
+  priority: 100 
+  log: "log/{sample}.cp_bam.du.log"
   message: "copying bam {input} {output}"
-  shell: "cp {input} {output}"
+  shell: "cp {input} {output} && du {input} {output} > {log}"
 
 
 rule index_bam: 
