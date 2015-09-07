@@ -149,12 +149,12 @@ rule hisat_alignment:
 
 
 rule hisat_aligned_only_to_sam:
-  output: "{TARGET_DIR}/{sample}.HLA12.hisat.sam"
+  output: "/home/ubuntu/hla/sams/{sample}.HLA12.hisat.sam"
   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "  {VDBDUMP}  {wildcards.sample}  |   {HISAT} --very-sensitive -x {HISATREF} -p {threads} -U -  | samtools view -S - -F 4 > /home/ubuntu/hla/runs/{wildcards.sample}.HLA12.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
+  shell: "  {VDBDUMP}  {wildcards.sample}  |   {HISAT} --very-sensitive -x {HISATREF} -p {threads} -U -  | samtools view -S - -F 4 > /home/ubuntu/hla/sams/{wildcards.sample}.HLA12.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
 
 
 
