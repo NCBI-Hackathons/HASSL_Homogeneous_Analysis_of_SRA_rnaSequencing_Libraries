@@ -154,7 +154,7 @@ rule hisat_aligned_only_to_sam:
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "  {VDBDUMP}  {wildcards.sample}  |   {HISAT} --very-sensitive -x {HISATREF} -p {threads} -U -  | samtools view -S - -F 4 > {TARGET_DIR}/{wildcards.sample}.HLA12.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
+  shell: "  {VDBDUMP}  {wildcards.sample}  |   {HISAT} --very-sensitive -x {HISATREF} -p {threads} -U -  | samtools view -S - -F 4 > /home/ubuntu/hla/runs/{wildcards.sample}.HLA12.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
 
 
 
