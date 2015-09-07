@@ -10,7 +10,7 @@ THREADS=12
 # USE ABSOLUTE PATHS!
 REFERENCE_DIR="/mnt/resources"
 HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
-HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna_rm.toplevel"   # REPEAT MASKED FASTA
+HISATREF_BASENAME = "HLA12"   # REPEAT MASKED FASTA
 #HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"     # UNMASKED FASTA
 FASTA_URL="ftp://ftp.ensembl.org/pub/release-81/fasta/homo_sapiens/dna/" + HISATREF_BASENAME + ".fa.gz"
 
