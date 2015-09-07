@@ -5,13 +5,29 @@
 import os 
 
 #set the number of threads to use for alignment and feature counting 
-THREADS=12
+THREADS=3
 
 # USE ABSOLUTE PATHS!
 REFERENCE_DIR="/mnt/resources"
 HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
+HISATREF_BASENAME = "HLA12"   # REPEAT MASKED FASTA
+#HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"     # UNMASKED FASTA
+FASTA_URL="ftp://ftp.ensembl.org/pub/release-81/fasta/homo_sapiens/dna/" + HISATREF_BASENAME + ".fa.gz"
+
+PICARDFLATFILE_NAME = "GRCh38.77.compatible.ucsc.picard.refflat.txt"
+GTFFILE_NAME = "Homo_sapiens.GRCh38.81.gtf"
+SPLICEFILE_NAME = "Ensembl.GRCh38.77.splicesites.txt"
+
+HISATREF=HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME
+PICARDFLATFILE=REFERENCE_DIR+ "/" + PICARDFLATFILE_NAME
+GTFFILE=REFERENCE_DIR+ "/" + GTFFILE_NAME
+SPLICEFILE=REFERENCE_DIR+ "/" + SPLICEFILE_NAME
 
 REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
+
+PICARDFLATFILE_URL=REFERENCE_BASE_URL+ "/" + PICARDFLATFILE_NAME
+GTFFILE_URL=REFERENCE_BASE_URL+ "/" + GTFFILE_NAME + ".gz"
+SPLICEFILE_URL=REFERENCE_BASE_URL+ "/" + SPLICEFILE_NAME
 
 
 # EXECUTABLE LOCATIONS (some on path probably)
@@ -29,7 +45,7 @@ VDBDUMP=" /home/ubuntu/install/sratoolkit.2.4.2-ubuntu64/bin/vdb-dump -f fastq "
 try:
   config["ACCESSION_FILE"]
 except KeyError: 
-  filename = "accessions"
+  filename = "accessions.txt"
 else:
   filename = config["ACCESSION_FILE"]
 
@@ -139,55 +155,6 @@ rule hisat_aligned_only_to_sam:
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
   shell: "  {VDBDUMP}  {wildcards.sample}  |   {HISAT} --very-sensitive -x {HISATREF} -p {threads} -U -  | samtools view -S - -F 4 > {TARGET_DIR}/{wildcards.sample}.HLA12.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
-
-
-
-
-#SCRIPT TO GATHER REFERENCES AND ANNOTATION FILES FOR COBRASNAKE RNASEQ PIPELINE
-
-rule resources:
-  input:  [PICARDFLATFILE, GTFFILE, SPLICEFILE, HISAT_REFERENCE_DIR+"/"+HISATREF_BASENAME+".rev.2.bt2l"]
-
-rule hisat_index:
-  output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
-  input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
-  message: "hisat-build indexing human genome {input}"
-  shell: "{HISAT_BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
-
-rule gunzip_reference_fasta:
-  output: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
-  input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa.gz"
-  message: "extracting human genome fasta {input}"
-  shell: "gunzip -c {input} > {output}"
-  
-rule get_reference_fasta:
-  output: temp(REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa.gz")
-  message: "downloading human reference genome from {FASTA_URL}"
-  shell: "wget -P {REFERENCE_DIR} {FASTA_URL}"
-
-
-rule get_splicesites:
-  output: SPLICEFILE
-  message: "downloading splicesites from {SPLICEFILE_URL}"
-  shell: "wget -P {REFERENCE_DIR} {SPLICEFILE_URL}"
-
-rule gunzip_gtf: 
-  output: GTFFILE
-  input: GTFFILE + ".gz"
-  message: "gunzipping GTF file {input}"
-  shell: "gunzip -c {input} > {output}"
-
-rule get_gtf:
-  output: GTFFILE + ".gz"
-  message: "downloading GTF from {GTFFILE_URL}"
-  shell: "wget -P {REFERENCE_DIR} {GTFFILE_URL}"
-  
-  
-rule get_refflat:
-  output: PICARDFLATFILE
-  message: "downloading refflat from {PICARDFLATFILE_URL}"
-  shell: "wget -P {REFERENCE_DIR} {PICARDFLATFILE_URL}"
-
 
 
 
