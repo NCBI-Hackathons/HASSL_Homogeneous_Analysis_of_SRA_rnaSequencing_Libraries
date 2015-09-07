@@ -10,24 +10,8 @@ THREADS=12
 # USE ABSOLUTE PATHS!
 REFERENCE_DIR="/mnt/resources"
 HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
-HISATREF_BASENAME = "HLA12"   # REPEAT MASKED FASTA
-#HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"     # UNMASKED FASTA
-FASTA_URL="ftp://ftp.ensembl.org/pub/release-81/fasta/homo_sapiens/dna/" + HISATREF_BASENAME + ".fa.gz"
-
-PICARDFLATFILE_NAME = "GRCh38.77.compatible.ucsc.picard.refflat.txt"
-GTFFILE_NAME = "Homo_sapiens.GRCh38.81.gtf"
-SPLICEFILE_NAME = "Ensembl.GRCh38.77.splicesites.txt"
-
-HISATREF=HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME
-PICARDFLATFILE=REFERENCE_DIR+ "/" + PICARDFLATFILE_NAME
-GTFFILE=REFERENCE_DIR+ "/" + GTFFILE_NAME
-SPLICEFILE=REFERENCE_DIR+ "/" + SPLICEFILE_NAME
 
 REFERENCE_BASE_URL="https://s3.amazonaws.com/genomicdata/HASSL"
-
-PICARDFLATFILE_URL=REFERENCE_BASE_URL+ "/" + PICARDFLATFILE_NAME
-GTFFILE_URL=REFERENCE_BASE_URL+ "/" + GTFFILE_NAME + ".gz"
-SPLICEFILE_URL=REFERENCE_BASE_URL+ "/" + SPLICEFILE_NAME
 
 
 # EXECUTABLE LOCATIONS (some on path probably)
@@ -45,7 +29,7 @@ VDBDUMP=" /home/ubuntu/install/sratoolkit.2.4.2-ubuntu64/bin/vdb-dump -f fastq "
 try:
   config["ACCESSION_FILE"]
 except KeyError: 
-  filename = "accessions.txt"
+  filename = "accessions"
 else:
   filename = config["ACCESSION_FILE"]
 
@@ -150,7 +134,7 @@ rule hisat_alignment:
 
 rule hisat_aligned_only_to_sam:
   output: "{TARGET_DIR}/{sample}.HLA12.hisat.sam"
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
   threads: THREADS
   log: "log/{sample}.hisat.log"
   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
