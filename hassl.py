@@ -139,7 +139,7 @@ rule tophat_alignment:
 
 rule vdbdump_reads: 
   output: temp("/scratch/03505/russd/{sample}.fastq")
-  message: "downloading reads for {sample}"
+  message: "downloading reads for {wildcards.sample}"
   shell: " {VDBDUMP} {wildcards.sample} > /scratch/03505/russd/{wildcards.sample}.fastq "
 # rule hisat_alignment:
 #   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
