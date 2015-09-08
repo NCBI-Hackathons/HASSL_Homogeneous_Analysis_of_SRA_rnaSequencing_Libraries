@@ -130,7 +130,7 @@ rule sam_to_bam:
 
 rule tophat_alignment: 
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
+  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
   threads: THREADS
   log: "log/{sample}.tophat2.log"
   message: "running tophat alignment on {wildcards.sample} with {threads} threads"
@@ -169,7 +169,7 @@ rule bowtie2_index:
   shell: "{BOWTIE_BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
 
 rule hisat_index:
-  output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
+  output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2"
   input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
   message: "hisat-build indexing human genome {input}"
   shell: "{HISAT_BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
