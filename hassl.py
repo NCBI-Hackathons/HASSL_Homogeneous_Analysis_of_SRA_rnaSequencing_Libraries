@@ -5,7 +5,7 @@
 import os 
 
 #set the number of threads to use for alignment and feature counting 
-THREADS=3
+THREADS=8
 
 # USE ABSOLUTE PATHS!
 REFERENCE_DIR="/work/03505/russd/resources"
@@ -163,13 +163,13 @@ rule gunzip_reference_fasta:
 rule get_reference_fasta:
   output: temp(REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa.gz")
   message: "downloading human reference genome from {FASTA_URL}"
-  shell: "wget -P {REFERENCE_DIR} {FASTA_URL}"
+  shell: "curl -o {REFERENCE_DIR}/{HISATREF_BASENAME}.fa.gz {FASTA_URL}"
 
 
 rule get_splicesites:
   output: SPLICEFILE
   message: "downloading splicesites from {SPLICEFILE_URL}"
-  shell: "wget -P {REFERENCE_DIR} {SPLICEFILE_URL}"
+  shell: "curl -o {REFERENCE_DIR}/{SPLICEFILE_NAME} {SPLICEFILE_URL}"
 
 rule gunzip_gtf: 
   output: GTFFILE
@@ -180,13 +180,13 @@ rule gunzip_gtf:
 rule get_gtf:
   output: GTFFILE + ".gz"
   message: "downloading GTF from {GTFFILE_URL}"
-  shell: "wget -P {REFERENCE_DIR} {GTFFILE_URL}"
+  shell: "curl -o {REFERENCE_DIR}/{GTFFILE_NAME} {GTFFILE_URL}"
   
   
 rule get_refflat:
   output: PICARDFLATFILE
   message: "downloading refflat from {PICARDFLATFILE_URL}"
-  shell: "wget -P {REFERENCE_DIR} {PICARDFLATFILE_URL}"
+  shell: "curl -o {REFERENCE_DIR}/{PICARDFLATFILE_NAME} {PICARDFLATFILE_URL}"
 
 
 
