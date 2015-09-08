@@ -39,8 +39,8 @@ HISAT=" /home1/03505/russd/software//hisat "
 HISAT_BUILD="/home1/03505/russd/bin/hisat-build"
 PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
-SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
-SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
+SAMTOOLS_ROCKS=" samtools "
+SAMTOOLS=" samtools "
 BOWTIE_BUILD= "bowtie2-build "
 VDBDUMP=" vdb-dump -f fastq "
 TOPHAT=" tophat2 "
@@ -74,7 +74,7 @@ else:
 
 
 rule all: 
-  input: expand("counts/{sample}.GRCh38.ens77.featureCounts.counts", sample=SAMPLES) , expand("log/{sample}.qc_check.done", sample=SAMPLES)
+  input: expand("bams/{sample}.GRCh38.ens77.hisat.sorted.bam", sample=SAMPLES) #, expand("log/{sample}.qc_check.done", sample=SAMPLES)
 
 
 rule clean: 
