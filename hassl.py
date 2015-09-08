@@ -43,6 +43,7 @@ SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
 SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
 BOWTIE_BUILD= "bowtie2-build "
 VDBDUMP=" vdb-dump -f fastq "
+TOPHAT=" tophat2 "
 
 #set the filename of the file with the list of accessions   
 try:
