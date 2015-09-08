@@ -5,10 +5,10 @@
 import os 
 
 #set the number of threads to use for alignment and feature counting 
-THREADS=8
+THREADS=12
 
 # USE ABSOLUTE PATHS!
-REFERENCE_DIR="/work/03505/russd/resources"
+REFERENCE_DIR="/scratch/03505/russd/resources"
 HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
 HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna_rm.toplevel"   # REPEAT MASKED FASTA
 #HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"     # UNMASKED FASTA
@@ -19,6 +19,8 @@ GTFFILE_NAME = "Homo_sapiens.GRCh38.81.gtf"
 SPLICEFILE_NAME = "Ensembl.GRCh38.77.splicesites.txt"
 
 HISATREF=HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME
+TOPHAT_TRANSCRIPT_INDEX="/scratch/03505/russd/resources/tophat_indexes/Homo_sapiens.GRCh38.dna_rm.toplevel.GTF81.transcriptome.index"
+
 PICARDFLATFILE=REFERENCE_DIR+ "/" + PICARDFLATFILE_NAME
 GTFFILE=REFERENCE_DIR+ "/" + GTFFILE_NAME
 SPLICEFILE=REFERENCE_DIR+ "/" + SPLICEFILE_NAME
@@ -40,6 +42,8 @@ FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCou
 SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
 SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
 BOWTIE_BUILD= "bowtie2-build "
+VDBDUMP=" vdb-dump -f fastq "
+
 #set the filename of the file with the list of accessions   
 try:
   config["ACCESSION_FILE"]
@@ -124,13 +128,22 @@ rule sam_to_bam:
   message: "converting sam to bam: {input} to {output}"
   shell: " {SAMTOOLS} view -bS {input} > {output} "
 
-rule hisat_alignment:
+rule tophat_alignment: 
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
   threads: THREADS
-  log: "log/{sample}.hisat.log"
-  message: "running hisat alignment on {wildcards.sample} with {threads} threads"
-  shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
+  log: "log/{sample}.tophat2.log"
+  message: "running tophat alignment on {wildcards.sample} with {threads} threads"
+  shell: " {VDBDUMP} {sample} | {TOPHAT} -p {threads} -G {GTFFILE} --transcriptome-index {TOPHAT_TRANSCRIPT_INDEX} -z pigz  {HISATREF} -  >  /bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   
+
+
+# rule hisat_alignment:
+#   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
+#   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
+#   threads: THREADS
+#   log: "log/{sample}.hisat.log"
+#   message: "running hisat alignment on {wildcards.sample} with {threads} threads"
+#   shell: "{HISAT} -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x {HISATREF} -p {threads} --sra-acc {wildcards.sample} -t --known-splicesite-infile {SPLICEFILE} -S bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  2> {log}"   # --novel-splicesite-infile splicesites/{wildcards.sample}.novel.splicesites 
 
 # HISAT hangs if you do two pass alignment!???!!! Must Fix 
 # rule hisat_alignment_one:
@@ -147,10 +160,10 @@ rule hisat_alignment:
 #SCRIPT TO GATHER REFERENCES AND ANNOTATION FILES FOR COBRASNAKE RNASEQ PIPELINE
 
 rule resources:
-  input:  [PICARDFLATFILE, GTFFILE, SPLICEFILE, HISAT_REFERENCE_DIR+"/"+HISATREF_BASENAME+".rev.2.bt2l"]
+  input:  [PICARDFLATFILE, GTFFILE, SPLICEFILE, HISAT_REFERENCE_DIR+"/"+HISATREF_BASENAME+".rev.2.bt2"]
 
 rule bowtie2_index:
-  output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
+  output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2"
   input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
   message: "bowtie2 indexing human genome {input}"
   shell: "{BOWTIE_BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
