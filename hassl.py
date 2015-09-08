@@ -131,13 +131,16 @@ rule sam_to_bam:
 
 rule tophat_alignment: 
   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
-  input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
+  input: "/scratch/03505/russd/{sample}.fastq", HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
   threads: THREADS
   log: "log/{sample}.tophat2.log"
   message: "running tophat alignment on {wildcards.sample} with {threads} threads"
-  shell: " {VDBDUMP} {wildcards.sample} | {TOPHAT} -p {threads} -G {GTFFILE} --transcriptome-index {TOPHAT_TRANSCRIPT_INDEX} -z pigz  -o bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  {HISATREF}  /proc/self/fd/0   2> {log}"   
+  shell: " {TOPHAT} -p {threads} -G {GTFFILE} --transcriptome-index {TOPHAT_TRANSCRIPT_INDEX} -z pigz  -o bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  {HISATREF}  {wildcards.sample}.fastq   2> {log}"   
 
-
+rule vdbdump_reads: 
+  output: temp("/scratch/03505/russd/{sample}.fastq")
+  message: "downloading reads for {sample}"
+  shell: " {VDBDUMP} {wildcards.sample} > /scratch/03505/russd/{wildcards.sample}.fastq "
 # rule hisat_alignment:
 #   output: temp("bams/{sample}.GRCh38.ens77.hisat.sam")
 #   input: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l" #, "bams/{sample}.GRCh38.ens77.hisat.temp.sam", "splicesites/{sample}.novel.splicesites"
