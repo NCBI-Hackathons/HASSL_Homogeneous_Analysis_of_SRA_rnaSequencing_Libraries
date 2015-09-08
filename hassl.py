@@ -31,9 +31,10 @@ SPLICEFILE_URL=REFERENCE_BASE_URL+ "/" + SPLICEFILE_NAME
 
 
 # EXECUTABLE LOCATIONS (some on path probably)
-HASSL=" /home/ubuntu/HASSL"
-HISAT=" /home/ubuntu/install/hisat/hisat "
-HISAT_BUILD="~/install/hisat/hisat-build"
+BIN="$HOME/bin"
+HASSL=" /home1/03505/russd/software/HASSL"
+HISAT=" {BIN}/hisat "
+HISAT_BUILD="{BIN}/hisat-build"
 PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
 SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
