@@ -135,7 +135,7 @@ rule tophat_alignment:
   threads: THREADS
   log: "log/{sample}.tophat2.log"
   message: "running tophat alignment on {wildcards.sample} with {threads} threads"
-  shell: " {VDBDUMP} {wildcards.sample} | {TOPHAT} -p {threads} -G {GTFFILE} --transcriptome-index {TOPHAT_TRANSCRIPT_INDEX} -z pigz  -o bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  {HISATREF} -   2> {log}"   
+  shell: " {VDBDUMP} {wildcards.sample} | {TOPHAT} -p {threads} -G {GTFFILE} --transcriptome-index {TOPHAT_TRANSCRIPT_INDEX} -z pigz  -o bams/{wildcards.sample}.GRCh38.ens77.hisat.sam  {HISATREF}  /proc/self/fd/0   2> {log}"   
 
 
 # rule hisat_alignment:
