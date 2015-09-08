@@ -8,7 +8,7 @@ import os
 THREADS=3
 
 # USE ABSOLUTE PATHS!
-REFERENCE_DIR="/mnt/resources"
+REFERENCE_DIR="/work/03505/russd/resources"
 HISAT_REFERENCE_DIR = REFERENCE_DIR + "/hisat_indexes"
 HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna_rm.toplevel"   # REPEAT MASKED FASTA
 #HISATREF_BASENAME = "Homo_sapiens.GRCh38.dna.toplevel"     # UNMASKED FASTA
