@@ -39,7 +39,7 @@ PICARD=" java -jar /home/ubuntu/install/picard-tools-1.138/picard.jar "
 FEATURECOUNTS="/home/ubuntu/install/subread-1.4.6-p4-Linux-x86_64/bin/featureCounts"
 SAMTOOLS_ROCKS=" /home/ubuntu/install/samtools_rocksdb/samtools/samtools "
 SAMTOOLS=" /home/ubuntu/install/samtools/samtools"
-BOWTIE2-BUILD= "bowtie2-build "
+BOWTIE_BUILD= "bowtie2-build "
 #set the filename of the file with the list of accessions   
 try:
   config["ACCESSION_FILE"]
@@ -153,7 +153,7 @@ rule bowtie2_index:
   output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
   input: REFERENCE_DIR + "/" + HISATREF_BASENAME + ".fa"
   message: "bowtie2 indexing human genome {input}"
-  shell: "{BOWTIE2-BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
+  shell: "{BOWTIE_BUILD} {input} {HISAT_REFERENCE_DIR}/{HISATREF_BASENAME}"
 
 rule hisat_index:
   output: HISAT_REFERENCE_DIR + "/" + HISATREF_BASENAME + ".rev.2.bt2l"
